@@ -1,5 +1,6 @@
 // 手写call
 // a.call(b) b即可调用a中的方法
+console.log('--------call--------');
 Function.prototype.myCall = function(context) {
     if (typeof this !== 'function') {
         throw new TypeError('Error');
@@ -29,4 +30,5 @@ var c = new B('大宝', '孩子');
 c.getName();
 console.log(c.sx);
 
-console.log(1111111111111);
+console.log('--------bind--------');
+

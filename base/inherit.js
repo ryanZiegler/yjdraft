@@ -61,6 +61,7 @@ function Bird(name) {
     Animal.call(this);
     this.name = name || 'niao';
 }
+// 方法1
 (function() {
     // 创建一个没有实例方法的类
     var Super = function() {};
@@ -68,6 +69,15 @@ function Bird(name) {
     //将实例作为子类的原型
     Bird.prototype = new Super();
 })();
+// 方法2 ES6 class集成Babel转化代码
+Bird.prototype = Object.create(Animal.prototype, {
+    constructor: {
+        value: Child,
+        enumerable: false,
+        writable: true,
+        configurable: true
+    }
+})
 
 var bird = new Bird();
 console.log(bird.name);
