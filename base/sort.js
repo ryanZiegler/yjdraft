@@ -62,7 +62,38 @@ const insertArr = [6,3,8,2,9,1];
 insertionSort(insertArr);
 console.log('插入排序: ', insertArr);
 
-// 折半插入 todo
+// 折半插入排序
+function halfInsertSort(arr) {
+    if (!Array.isArray(arr) || !arr.length) return console.log('参数非法');
+    if (!arr.every(e => { return !isNaN(e) })) return console.log('参数对象非法');
+
+    let current, low, high, mid;
+    for (let i = 1,l = arr.length; i < l; i++) {
+        current = arr[i];
+        low = 0;
+        high = i;
+        while (low < high) {
+            mid = (low + high) / 2;
+            if (current > arr[mid]) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        
+        for (let j = i - 1; j >= low; j--) {
+            arr[j+1] = arr[j];
+        }
+        arr[low] = current;
+    }
+
+    return arr;
+}
+
+const halfInsertArr = [6,3,8,2,9,1];
+halfInsertSort(halfInsertArr);
+console.log('折半插入: ', halfInsertArr);
+
 
 // 希尔排序 跳着选取子序列进行插入排序
 // 个数少插入排序快 有序列插入排序快
