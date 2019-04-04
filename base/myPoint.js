@@ -1,6 +1,5 @@
 // 手写call
 // a.call(b) b即可调用a中的方法
-console.log('--------call--------');
 Function.prototype.myCall = function(context) {
     if (typeof this !== 'function') {
         throw new TypeError('Error');
@@ -16,7 +15,6 @@ Function.prototype.myCall = function(context) {
     return result;
 }
 
-console.log('--------apply--------');
 Function.prototype.myApply = function(context) {
     if (typeof this !== 'function') {
         throw new TypeError('Error');
@@ -35,7 +33,6 @@ Function.prototype.myApply = function(context) {
     return result;
 }
 
-console.log('--------bind--------');
 Function.prototype.myBind = function(context) {
     if (typeof this !== 'function') {
         throw new TypeError('Error');
@@ -57,19 +54,49 @@ Function.prototype.myBind = function(context) {
 
 
 function A(name, desc) {
-    this.sx = 'a';
+    this.fn = 'A';
     this.name = name;
     this.desc = desc;
     this.getName = function () {
-        console.log(name);
+        console.log(this.name);
+    }
+    this.introduce = function () {
+        console.log(this.name + '是一名' +this.desc);
     }
 }
 
-function B(name, desc) {
-    this.sx = 'b';
+console.log('--------call--------');
+function Test1(name, desc) {
+    this.fn = 'Test1';
     A.myCall(this, name, desc);
 }
 
-var c = new B('大宝', '孩子');
-c.getName();
-console.log(c.sx);
+var test1 = new Test1('ego', '前端抠脚师');
+console.log(test1.fn);
+test1.introduce();
+
+console.log('--------apply--------');
+function Test2(arr) {
+    this.fn = 'Test2';
+    A.myApply(this, arr);
+}
+
+// var test1 = new Test2(['ego', '前端抠脚师']);
+Test2(['ego', '前端抠脚师']);
+console.log(test1.fn);
+test1.introduce();
+
+console.log('--------bind--------');
+var Tools = {
+    name: '工具',
+    desc() {
+        console.log(this.name + '可以被人使用');
+    }
+}
+
+var Car = {
+    name: '汽车'
+}
+
+var car = Tools.desc.myBind(Car);
+car();
