@@ -215,7 +215,7 @@ function heapSort(arr) {
 
 const heapArr = [6,3,8,2,9,1];
 heapSort(heapArr);
-console.log('堆排序: ', heapArr);
+console.log('堆排序:   ', heapArr);
 
 // 计数排序
 function countingSort(arr) {
@@ -285,4 +285,40 @@ function bucketSort(arr, bucketSize) {
 
 const bucketArr = [63, 157, 189, 51, 101, 47, 141, 121, 157, 156, 194];
 bucketSort(bucketArr);
-console.log('桶排序: ', bucketArr);
+console.log('桶排序:   ', bucketArr);
+
+// 基数排序(按位比较)
+// maxDigit 最大位数
+function radixSort(arr, maxDigit) {
+    if (!Array.isArray(arr) || !arr.length) return console.log('参数非法');
+    if (!arr.every(e => { return !isNaN(e) })) return console.log('参数对象非法');
+
+    let counter = [],
+        mod = 10,
+        dev = 1,
+        len = arr.length;
+
+    for (let i = 0; i < maxDigit; i++, dev *= 10, mod *= 10) {
+        // 按位数排序放进 counter数据
+        for (let j = 0; j < len; j++) {
+            let bucket = parseInt((arr[j] % mod) / dev);
+            if (!counter[bucket]) {
+                counter[bucket] = [];
+            }
+            counter[bucket].push(arr[j]);
+        }
+        let index = 0;
+        // 按位数顺序重新变成arr
+        for (let j = 0; j < counter.length; j++) {
+            while (counter[j] && counter[j].length) {
+                arr[index++] = counter[j].shift();
+            }
+        }
+    }
+
+    return arr;
+}
+
+const radixArr = [63, 157, 189, 51, 101, 47, 141, 121, 157, 156, 194];
+radixSort(radixArr, 3);
+console.log('基数排序: ', radixArr);
