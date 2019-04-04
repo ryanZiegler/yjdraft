@@ -1,4 +1,9 @@
-// 冒泡排序
+/**
+ * 冒泡排序
+ * 最大或最小会浮(互换)到最上面
+ * 
+ * @param {Array} arr 
+ */
 function bubbleSort(arr) {
     if (!Array.isArray(arr) || !arr.length) return console.log('参数非法');
     if (!arr.every(e => { return !isNaN(e) })) return console.log('参数对象非法');
@@ -18,7 +23,12 @@ const bubbleArr = [6,3,8,2,9,1];
 bubbleSort(bubbleArr);
 console.log('冒泡排序: ', bubbleArr);
 
-// 选择排序
+/**
+ * 选择排序
+ * 逐个选最大或最小
+ * 不稳定
+ * @param {Array} arr 
+ */
 function selectSort(arr) {
     if (!Array.isArray(arr) || !arr.length) return console.log('参数非法');
     if (!arr.every(e => { return !isNaN(e) })) return console.log('参数对象非法');
@@ -41,7 +51,12 @@ const selectArr = [6,3,8,2,9,1];
 selectSort(selectArr);
 console.log('选择排序: ', selectArr);
 
-// 插入排序
+/**
+ * 插入排序
+ * 每一次和前面有序数组比,找到插入位置
+ * 
+ * @param {Array} arr 
+ */
 function insertionSort(arr) {
     if (!Array.isArray(arr) || !arr.length) return console.log('参数非法');
     if (!arr.every(e => { return !isNaN(e) })) return console.log('参数对象非法');
@@ -62,7 +77,12 @@ const insertArr = [6,3,8,2,9,1];
 insertionSort(insertArr);
 console.log('插入排序: ', insertArr);
 
-// 折半插入排序
+/**
+ * 折半插入排序
+ * 有序数组折半查找插入位置
+ * 
+ * @param {Array} arr 
+ */
 function halfInsertSort(arr) {
     if (!Array.isArray(arr) || !arr.length) return console.log('参数非法');
     if (!arr.every(e => { return !isNaN(e) })) return console.log('参数对象非法');
@@ -94,9 +114,13 @@ const halfInsertArr = [6,3,8,2,9,1];
 halfInsertSort(halfInsertArr);
 console.log('折半插入: ', halfInsertArr);
 
-
-// 希尔排序 跳着选取子序列进行插入排序
-// 个数少插入排序快 有序列插入排序快
+/**
+ * 希尔排序
+ * 间隔(gap)跳着选取子序列进行插入排序
+ * 个数少插入排序快 有序列插入排序快
+ * 不稳定
+ * @param {Array} arr 
+ */
 function shellSort(arr) {
     if (!Array.isArray(arr) || !arr.length) return console.log('参数非法');
     if (!arr.every(e => { return !isNaN(e) })) return console.log('参数对象非法');
@@ -123,7 +147,13 @@ const shellArr = [6,3,8,2,9,1];
 shellSort(shellArr);
 console.log('希尔排序: ', shellArr);
 
-// 归并排序(分治法) 递归版本
+/**
+ * 归并排序(递归版本)
+ * 分治法 
+ * 所有递归都可以用迭代重写
+ * 
+ * @param {Array} arr 
+ */
 function mergeSort(arr) {
     if (!Array.isArray(arr) || !arr.length) return console.log('参数非法');
     if (!arr.every(e => { return !isNaN(e) })) return console.log('参数对象非法');
@@ -161,6 +191,16 @@ const mergeArr = [6,3,8,2,9,1];
 shellSort(mergeArr);
 console.log('归并排序: ', mergeArr);
 
+/**
+ * 快速排序(递归实现)
+ * 还可以用栈实现
+ * 冒泡基础上的递归分治法
+ * pivot 基准(不动,最后动)
+ * 
+ * @param {Array} arr 
+ * @param {Number} left 
+ * @param {Number} right 
+ */
 // 快速排序 递归
 function quickSort(arr, left, right) {
     if (!Array.isArray(arr) || !arr.length) return console.log('参数非法');
@@ -202,8 +242,13 @@ const quickArr = [6,3,8,2,9,1];
 quickSort(quickArr);
 console.log('快速排序: ', quickArr);
 
-// 堆排序 (大顶堆, 小顶堆)
-// 1.建立大顶堆  2.堆头,堆尾互换, len--  3.调整大顶堆
+/**
+ * 堆排序 (大顶堆, 小顶堆)
+ * 1.建立大顶堆  2.堆头,堆尾互换, len--  3.调整大顶堆
+ * 不稳定
+ * 
+ * @param {Array} arr 
+ */
 function heapSort(arr) {
     if (!Array.isArray(arr) || !arr.length) return console.log('参数非法');
     if (!arr.every(e => { return !isNaN(e) })) return console.log('参数对象非法');
@@ -248,7 +293,13 @@ const heapArr = [6,3,8,2,9,1];
 heapSort(heapArr);
 console.log('堆排序:   ', heapArr);
 
-// 计数排序
+/**
+ * 计数排序
+ * n+k 稳定性强,k为最大排序值
+ * 空间换时间
+ * 
+ * @param {Array} arr 
+ */
 function countingSort(arr) {
     if (!Array.isArray(arr) || !arr.length) return console.log('参数非法');
     if (!arr.every(e => { return !isNaN(e) })) return console.log('参数对象非法');
@@ -280,7 +331,16 @@ const countingArr = [6,3,8,2,9,1];
 countingSort(countingArr);
 console.log('计数排序: ', countingArr);
 
-// 桶排序(箱排序)
+/**
+ * 桶排序(箱排序)
+ * 计数排序的升级
+ * 通过函数映射关系,分治法的究极实现
+ * 1.桶越多越快 2.映射函数将N个数均匀放入k个桶
+ * 区间分桶
+ * 
+ * @param {Array} arr 
+ * @param {Number} bucketSize 桶个数
+ */
 function bucketSort(arr, bucketSize) {
     if (!Array.isArray(arr) || !arr.length) return console.log('参数非法');
     if (!arr.every(e => { return !isNaN(e) })) return console.log('参数对象非法');
@@ -318,8 +378,12 @@ const bucketArr = [63, 157, 189, 51, 101, 47, 141, 121, 157, 156, 194];
 bucketSort(bucketArr);
 console.log('桶排序:   ', bucketArr);
 
-// 基数排序(按位比较)
-// maxDigit 最大位数
+/**
+ * 基数排序
+ * 切割位数 分位比较
+ * @param {Array} arr 
+ * @param {Number} maxDigit 最大位数
+ */
 function radixSort(arr, maxDigit) {
     if (!Array.isArray(arr) || !arr.length) return console.log('参数非法');
     if (!arr.every(e => { return !isNaN(e) })) return console.log('参数对象非法');
