@@ -20,8 +20,8 @@ Cat.prototype.name = 'cat';
 
 var cat = new Cat();
 console.log(cat.name);
-console.log(cat.eat('fish'));
-console.log(cat.sleep());
+cat.eat('fish');
+cat.sleep();
 console.log(cat instanceof Cat);
 console.log(cat instanceof Animal);  
 
@@ -34,8 +34,8 @@ function Dog(name) {
 
 var dog = new Dog();
 console.log(dog.name);
-// console.log(dog.eat('fish'));    // 只能继承父类实例的属性和方法，不能继承原型上的属性和方法。
-console.log(dog.sleep());
+// dog.eat('fish');    // 只能继承父类实例的属性和方法，不能继承原型上的属性和方法。
+dog.sleep();
 console.log(dog instanceof Dog);
 console.log(dog instanceof Animal);  
 
@@ -50,8 +50,8 @@ Monkey.prototype.constructor = Monkey;
 
 var monkey = new Monkey();
 console.log(monkey.name);
-console.log(monkey.eat('banana'));
-console.log(monkey.sleep());
+monkey.eat('banana');
+monkey.sleep();
 console.log(monkey instanceof Monkey);
 console.log(monkey instanceof Animal); 
 
@@ -72,7 +72,7 @@ function Bird(name) {
 // 方法2 ES6 class集成Babel转化代码
 Bird.prototype = Object.create(Animal.prototype, {
     constructor: {
-        value: Child,
+        value: Bird,
         enumerable: false,
         writable: true,
         configurable: true
@@ -81,8 +81,8 @@ Bird.prototype = Object.create(Animal.prototype, {
 
 var bird = new Bird();
 console.log(bird.name);
-console.log(bird.eat('worm'));
-console.log(bird.sleep());
+bird.eat('worm');
+bird.sleep();
 console.log(bird instanceof Bird);
 console.log(bird instanceof Animal); 
 
