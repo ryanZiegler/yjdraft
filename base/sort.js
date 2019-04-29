@@ -238,6 +238,23 @@ function swap(arr, i, index) {
     arr[index] = temp;
 }
 
+function quickSort2(arr) {
+    if(arr.length <= 1) {
+        return arr;  //递归出口
+    }
+    var left = [],
+        right = [],
+        current = arr.splice(0,1); 
+    for(let i = 0; i < arr.length; i++) {
+        if(arr[i] < current) {
+            left.push(arr[i])  //放在左边
+        } else {
+            right.push(arr[i]) //放在右边
+        }
+    }
+    return quickSort2(left).concat(current,quickSort(right));
+}
+
 const quickArr = [6,3,8,2,9,1];
 quickSort(quickArr);
 console.log('快速排序: ', quickArr);
