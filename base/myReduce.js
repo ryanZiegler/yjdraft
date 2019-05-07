@@ -26,3 +26,41 @@ Array.prototype.myReduce = function() {
 };
 
 console.log([1, 3, 5].myReduce((i, j) => { return i * j }));
+
+// use reduce realize map
+Array.prototype.myMap = function() {
+    const ary = this;
+
+    if (typeof arguments[0] !== 'function') {
+        throw new TypeError(arguments[0] + ' is not a function');
+    }
+
+    if (!Array.isArray(ary)) {
+        throw new TypeError('ary must be a Array');
+    }
+
+    return ary.reduce((acc, value, index) => {
+        return acc.concat([ arguments[0].call(ary, value, index, ary) ]);
+    }, []);
+}
+
+console.log([1, 3, 5].myMap(() => { return 1 }));
+
+// use reduce realize filter
+Array.prototype.myFilter = function() {
+    const ary = this;
+
+    if (typeof arguments[0] !== 'function') {
+        throw new TypeError(arguments[0] + ' is not a function');
+    }
+
+    if (!Array.isArray(ary)) {
+        throw new TypeError('ary must be a Array');
+    }
+
+    return ary.reduce((acc, value, index) => {
+        return arguments[0].call(ary, value, index, ary) ? acc.concat([ value ]) : acc
+    }, []);
+}
+
+console.log([1, 3, 5].myFilter((i) => { return i > 2 }));
