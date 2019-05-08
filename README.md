@@ -4,7 +4,7 @@
 
 
 
-#### 基础 Base
+### 基础 Base
 
 1. 柯里化 [curry.js](https://github.com/ryanZiegler/yjdraft/blob/master/base/curry.js)
 2. 深拷贝 [deepCopy.js](https://github.com/ryanZiegler/yjdraft/blob/master/base/deepCopy.js)
@@ -18,7 +18,7 @@
 
 
 
-#### 练习 Practice
+### 练习 Practice
 
 1. 数组交集 [intersection.js](https://github.com/ryanZiegler/yjdraft/blob/master/practice/intersection.js)
 2. [test.js](https://github.com/ryanZiegler/yjdraft/blob/master/practice/test.js)
