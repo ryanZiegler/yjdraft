@@ -12,3 +12,6 @@ function deepCopy(obj) {
     }
     return result;
 }
+
+const a = { name: '你好', age: 19 };
+console.log(deepCopy(a));
