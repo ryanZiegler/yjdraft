@@ -252,7 +252,7 @@ function quickSort2(arr) {
             right.push(arr[i]) //放在右边
         }
     }
-    return quickSort2(left).concat(current,quickSort(right));
+    return quickSort2(left).concat(current,quickSort2(right));
 }
 
 const quickArr = [6,3,8,2,9,1];
