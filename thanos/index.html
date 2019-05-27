@@ -22,17 +22,55 @@
             width: 100%;
             height: 100%;
             display: flex;
-            align-items:center;
-            justify-content:space-around;
+            align-items: center;
+            justify-content: space-around;
         }
-        .things {
-            
-        }
-        .operation {
-            
+        #things {
+            position: relative;
         }
         .time_gem {
             margin-top: 20px;
+        }
+        .dust {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            filter: blur(0.05em);
+        }
+
+        .quickFade {
+            animation: fadeout 1.0s linear forwards;
+        }
+
+        /* .fade {
+            animation: fadeout 2s linear forwards;
+        } */
+
+        @keyframes fadeout {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .blur {
+            animation: fadeblur 2s ease-in forwards;
+        }
+
+        @keyframes fadeblur {
+            0% {
+                opacity: 1;
+                filter: blur(0.05em);
+            }
+            80% {
+                filter: blur(0.188em);
+            }
+            100% {
+                opacity: 0;
+            }
         }
     </style>
 </head>
@@ -55,7 +93,7 @@
     </div>
     <script>
         const canvasCount = 35;
-        const imageDataArray = [];
+        let imageDataArray = [];
         const btn = document.querySelector(".snap");
         const weightedBtn = document.querySelector(".weighted_snap");
 
@@ -64,6 +102,8 @@
         }
 
         weightedBtn.onclick = function() {
+            // const imageBox = document.getElementById('things');
+            // imageBox.classList.remove("quickFade");
             startAnimation(true);
         }
 
@@ -71,6 +111,8 @@
         function startAnimation(bool) {
             const imageBox = document.getElementById('things');
             html2canvas(imageBox, {
+                allowTaint: 0,              //允许污染
+		        useCORS: true,              //使用跨域(当allowTaint为true时这段代码没什么用)
                 backgroundColor: 'transparent'
             }).then(canvas => {
                 console.log(bool);
@@ -78,7 +120,7 @@
                 const ctx = canvas.getContext('2d');
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 const pixelArr = imageData.data;
-                
+                debugger;
                 // 创建一个和图像信息数组长度相同的数组并填充0（相当于一个和原图像尺寸相同的透明图像）
                 const data = pixelArr.slice(0).fill(0);
                 //将透明图像数组复制多个
@@ -104,9 +146,25 @@
                         canvas.width,
                         canvas.height
                     );
+                    // 为 canvas 添加 class dust
                     c.classList.add('dust'); 
+                    setTimeout(() => {
+                        // 为每个 canvas 添加 animation
+                        animationTransform(c, 200, -100, chance.integer({ min: -25, max: 25 }), 2000);
+
+                        c.classList.add('blur');
+                        // 随着动画移除 canvas
+                        setTimeout(() => {
+                            c.remove();
+                        }, 2050);
+                    }, 70 * i);
                     
+                    imageBox.appendChild(c);
                 }
+                
+                Array.from(imageBox.querySelectorAll(":not(.dust)")).map(el => {
+                    el.classList.add("quickFade");
+                });
 
             }).catch(err => {
                 console.log(err);
@@ -123,8 +181,32 @@
             }
             return chance.weighted(seq, prob);
         }
-       
 
+        // 从图像数据生成 canvas
+        function newCanvasFromImageData(imageDataArray, w, h) {
+            const canvas = document.createElement("canvas");
+            canvas.width = w;
+            canvas.height = h;
+            const tempCtx = canvas.getContext("2d");
+            tempCtx.putImageData(new ImageData(imageDataArray, w, h), 0, 0);
+
+            return canvas;
+        }
+       
+        // 为 canvas 添加灰飞烟灭动画
+        function animationTransform(elem, sx, sy, angle, duration) {
+            /** element.animate(keyframes, options);
+             *  keyframes 关键帧/一个对象，代表关键帧的一个集合
+             *  options 可选项/代表动画持续时间的整形数字 (以毫秒为单位), 或者一个包含一个或多个时间属性的对象：
+             **/
+            elem.animate([
+                { transform: "rotate(0) translate(0, 0)" },
+                { transform: "rotate(" + angle + "deg) translate(" + sx + "px," + sy + "px)" }
+            ], {
+                duration: duration,
+                easing: "ease-in"
+		    });
+        }
     </script>
 </body>
 </html>
