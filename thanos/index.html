@@ -4,33 +4,127 @@
     <meta charset="UTF-8">
     <title>Thanos</title>
     <script src="./html2canvas.min.js"></script>
+    <script src="./chance.min.js"></script>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+        }
+        html,body {
+            width:100%;
+            height:100%;
         }
         button {
             width: 60px;
             height: 30px;
         }
         .Thanos {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items:center;
+            justify-content:space-around;
+        }
+        .things {
             
+        }
+        .operation {
+            
+        }
+        .time_gem {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <div class="Thanos"> 
-        <div class="infinite_gloves">
-            <button class="snap">响指</button>    
-        </div>
-        <div class="time_gem">
-            <button class="set_back">逆转</button>       
-        </div>
         <div id="things">
             <img src="https://i.loli.net/2019/05/24/5ce7ad617873a80795.jpg" alt="timg.jpg" title="timg.jpg" />
         </div>
+        <div class="operation">
+                <div class="infinite_gloves">
+                    <button class="snap">响指</button>    
+                </div>
+                <div class="infinite_gloves">
+                    <button class="weighted_snap">加权响指</button>    
+                </div>
+                <div class="time_gem">
+                    <button class="set_back">逆转</button>       
+                </div>
+            </div>
     </div>
     <script>
+        const canvasCount = 35;
+        const imageDataArray = [];
+        const btn = document.querySelector(".snap");
+        const weightedBtn = document.querySelector(".weighted_snap");
+
+        btn.onclick = function() {
+            startAnimation(false);
+        }
+
+        weightedBtn.onclick = function() {
+            startAnimation(true);
+        }
+
+        // 开始灰飞烟灭动画
+        function startAnimation(bool) {
+            const imageBox = document.getElementById('things');
+            html2canvas(imageBox, {
+                backgroundColor: 'transparent'
+            }).then(canvas => {
+                console.log(bool);
+                // 获取 canvas 画布像素数据
+                const ctx = canvas.getContext('2d');
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const pixelArr = imageData.data;
+                
+                // 创建一个和图像信息数组长度相同的数组并填充0（相当于一个和原图像尺寸相同的透明图像）
+                const data = pixelArr.slice(0).fill(0);
+                //将透明图像数组复制多个
+                imageDataArray = Array.from({ length: canvasCount }, () =>
+                    data.slice(0)
+                );
+
+                // 将原图像上的像素信息随机分配进不同的透明图象上，位置保持不变
+                for(let i = 0; i < pixelArr.length; i += 4)  {
+                    const p = Math.floor((i / pixelArr.length) * canvasCount);
+                    const a = bool ? imageDataArray[weightedRandomDistrib(p)] : imageDataArray[Math.floor(Math.random() * canvasCount)]
+                    //将像素信息放入随机到的透明图像数组中覆盖
+                    a[i] = pixelArr[i];
+                    a[i + 1] = pixelArr[i + 1];
+                    a[i + 2] = pixelArr[i + 2];
+                    a[i + 3] = pixelArr[i + 3];
+                };
+
+                // 将生产的 canvas 数据添加进元素
+                for (let i = 0; i < canvasCount; i++) {
+                    const c = newCanvasFromImageData(
+                        imageDataArray[i],
+                        canvas.width,
+                        canvas.height
+                    );
+                    c.classList.add('dust'); 
+                    
+                }
+
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+
+        // 权重随机分布 Math.abs() 取绝对值  Math.pow(a, b) a的b次方 
+        // chance.weighted(['a', 'b'], [100, 1])
+        function weightedRandomDistrib(peak) {
+            var prob = [], seq = [];
+            for(let i=0;i<canvasCount;i++) {
+                prob.push(Math.pow(canvasCount-Math.abs(peak-i),3));
+                seq.push(i);
+            }
+            return chance.weighted(seq, prob);
+        }
+       
+
     </script>
 </body>
 </html>
