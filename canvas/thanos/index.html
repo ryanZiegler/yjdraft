@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Thanos</title>
+    <script src="./html2canvas.min.js"></script>
+    <script src="./chance.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        html,body {
+            width:100%;
+            height:100%;
+        }
+        button {
+            width: 60px;
+            height: 30px;
+            margin-bottom: 20px;
+        }
+        .Thanos {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        #things {
+            position: relative;
+        }
+        /* .time_gem {
+            margin-top: 20px;
+        } */
+        .dust {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            filter: blur(0.05em);
+        }
+
+        .quickFade {
+            animation: fadeout 1.0s linear forwards;
+        }
+
+        /* .fade {
+            animation: fadeout 2s linear forwards;
+        } */
+
+        @keyframes fadeout {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .blur {
+            animation: fadeblur 2s ease-in forwards;
+        }
+
+        @keyframes fadeblur {
+            0% {
+                opacity: 1;
+                filter: blur(0.05em);
+            }
+            80% {
+                filter: blur(0.188em);
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="Thanos"> 
+        <div id="things">
+            <img src="https://i.loli.net/2019/05/24/5ce7ad617873a80795.jpg" alt="timg.jpg" title="timg.jpg" />
+        </div>
+        <div class="operation">
+                <div class="infinite_gloves">
+                    <button class="snap">响指</button>    
+                </div>
+                <div class="infinite_gloves">
+                    <button class="weighted_snap">加权响指</button>    
+                </div>
+                <div class="time_gem">
+                    <button class="set_back">逆转</button>       
+                </div>
+            </div>
+    </div>
+    <script>
+        const canvasCount = 35;             // 分散原图像的像素点的 canvas 总数
+        let imageDataArray = [];            // 图片数据数组
+        const imageBox = document.getElementById('things');
+        const btn = document.querySelector(".snap");
+        const weightedBtn = document.querySelector(".weighted_snap");
+        const backBtn = document.querySelector(".set_back");
+
+        // 绑定动画方法
+        btn.onclick = function() {
+            startAnimation(false);
+        }
+
+        weightedBtn.onclick = function() {
+            startAnimation(true);
+        }
+
+        backBtn.onclick = function() {
+            imageBox.querySelector('img').classList.remove("quickFade");
+        }
+
+        // 开始灰飞烟灭动画
+        function startAnimation(bool) {
+            html2canvas(imageBox, {
+                allowTaint: 0,              //允许污染
+		        useCORS: true,              //使用跨域(当allowTaint为true时这段代码没什么用)
+                backgroundColor: 'transparent'
+            }).then(canvas => {
+                console.log("是否加权响指:" + bool);
+                // 获取 canvas 画布像素数据
+                const ctx = canvas.getContext('2d');
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const pixelArr = imageData.data;
+                
+                // 创建一个和图像信息数组长度相同的数组并填充0（相当于一个和原图像尺寸相同的透明图像）
+                const data = pixelArr.slice(0).fill(0);
+                //将透明图像数组复制多个
+                imageDataArray = Array.from({ length: canvasCount }, () =>
+                    data.slice(0)
+                );
+
+                // 将原图像上的像素信息随机分配进不同的透明图象上，位置保持不变
+                for(let i = 0; i < pixelArr.length; i += 4)  {
+                    const p = Math.floor((i / pixelArr.length) * canvasCount);
+                    const a = bool ? imageDataArray[weightedRandomDistrib(p)] : imageDataArray[Math.floor(Math.random() * canvasCount)]
+                    //将像素信息放入随机到的透明图像数组中覆盖
+                    a[i] = pixelArr[i];
+                    a[i + 1] = pixelArr[i + 1];
+                    a[i + 2] = pixelArr[i + 2];
+                    a[i + 3] = pixelArr[i + 3];
+                };
+
+                // 将生产的 canvas 数据添加进元素
+                for (let i = 0; i < canvasCount; i++) {
+                    const c = newCanvasFromImageData(
+                        imageDataArray[i],
+                        canvas.width,
+                        canvas.height
+                    );
+                    // 为 canvas 添加 class dust 定位和原图重合
+                    c.classList.add('dust'); 
+                    setTimeout(() => {
+                        // 为每个 canvas 添加 animation
+                        animationTransform(c, 200, -100, chance.integer({ min: -25, max: 25 }), 2000);
+                        // 添加动画 class
+                        c.classList.add('blur');
+                        // 随着动画移除 canvas
+                        setTimeout(() => {
+                            c.remove();
+                        }, 2050);
+                    }, 70 * i);
+                    // 将 canvas 元素添加进 imageBox 盒子
+                    imageBox.appendChild(c);
+                }
+                
+                // 给原图 image 添加class quickFade 逐渐消失
+                Array.from(imageBox.querySelectorAll(":not(.dust)")).map(el => {
+                    el.classList.add("quickFade");
+                });
+
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+
+        // 权重随机分布 Math.abs() 取绝对值  Math.pow(a, b) a的b次方 
+        // chance.weighted(['a', 'b'], [100, 1])
+        function weightedRandomDistrib(peak) {
+            var prob = [], seq = [];
+            for(let i=0;i<canvasCount;i++) {
+                prob.push(Math.pow(canvasCount-Math.abs(peak-i),3));
+                seq.push(i);
+            }
+            return chance.weighted(seq, prob);
+        }
+
+        // 从图像数据生成 canvas
+        function newCanvasFromImageData(imageDataArray, w, h) {
+            const canvas = document.createElement("canvas");
+            canvas.width = w;
+            canvas.height = h;
+            const tempCtx = canvas.getContext("2d");
+            tempCtx.putImageData(new ImageData(imageDataArray, w, h), 0, 0);
+
+            return canvas;
+        }
+       
+        // 为 canvas 添加灰飞烟灭动画
+        function animationTransform(elem, sx, sy, angle, duration) {
+            /** element.animate(keyframes, options);
+             *  keyframes 关键帧/一个对象，代表关键帧的一个集合
+             *  options 可选项/代表动画持续时间的整形数字 (以毫秒为单位), 或者一个包含一个或多个时间属性的对象：
+             **/
+            elem.animate([
+                { transform: "rotate(0) translate(0, 0)" },
+                { transform: "rotate(" + angle + "deg) translate(" + sx + "px," + sy + "px)" }
+            ], {
+                duration: duration,
+                easing: "ease-in"
+		    });
+        }
+    </script>
+</body>
+</html>
