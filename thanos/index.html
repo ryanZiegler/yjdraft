@@ -17,6 +17,7 @@
         button {
             width: 60px;
             height: 30px;
+            margin-bottom: 20px;
         }
         .Thanos {
             width: 100%;
@@ -28,9 +29,9 @@
         #things {
             position: relative;
         }
-        .time_gem {
+        /* .time_gem {
             margin-top: 20px;
-        }
+        } */
         .dust {
             position: absolute;
             top: 0;
@@ -92,35 +93,39 @@
             </div>
     </div>
     <script>
-        const canvasCount = 35;
-        let imageDataArray = [];
+        const canvasCount = 35;             // 分散原图像的像素点的 canvas 总数
+        let imageDataArray = [];            // 图片数据数组
+        const imageBox = document.getElementById('things');
         const btn = document.querySelector(".snap");
         const weightedBtn = document.querySelector(".weighted_snap");
+        const backBtn = document.querySelector(".set_back");
 
+        // 绑定动画方法
         btn.onclick = function() {
             startAnimation(false);
         }
 
         weightedBtn.onclick = function() {
-            // const imageBox = document.getElementById('things');
-            // imageBox.classList.remove("quickFade");
             startAnimation(true);
+        }
+
+        backBtn.onclick = function() {
+            imageBox.querySelector('img').classList.remove("quickFade");
         }
 
         // 开始灰飞烟灭动画
         function startAnimation(bool) {
-            const imageBox = document.getElementById('things');
             html2canvas(imageBox, {
                 allowTaint: 0,              //允许污染
 		        useCORS: true,              //使用跨域(当allowTaint为true时这段代码没什么用)
                 backgroundColor: 'transparent'
             }).then(canvas => {
-                console.log(bool);
+                console.log("是否加权响指:" + bool);
                 // 获取 canvas 画布像素数据
                 const ctx = canvas.getContext('2d');
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 const pixelArr = imageData.data;
-                debugger;
+                
                 // 创建一个和图像信息数组长度相同的数组并填充0（相当于一个和原图像尺寸相同的透明图像）
                 const data = pixelArr.slice(0).fill(0);
                 //将透明图像数组复制多个
@@ -146,22 +151,23 @@
                         canvas.width,
                         canvas.height
                     );
-                    // 为 canvas 添加 class dust
+                    // 为 canvas 添加 class dust 定位和原图重合
                     c.classList.add('dust'); 
                     setTimeout(() => {
                         // 为每个 canvas 添加 animation
                         animationTransform(c, 200, -100, chance.integer({ min: -25, max: 25 }), 2000);
-
+                        // 添加动画 class
                         c.classList.add('blur');
                         // 随着动画移除 canvas
                         setTimeout(() => {
                             c.remove();
                         }, 2050);
                     }, 70 * i);
-                    
+                    // 将 canvas 元素添加进 imageBox 盒子
                     imageBox.appendChild(c);
                 }
                 
+                // 给原图 image 添加class quickFade 逐渐消失
                 Array.from(imageBox.querySelectorAll(":not(.dust)")).map(el => {
                     el.classList.add("quickFade");
                 });
