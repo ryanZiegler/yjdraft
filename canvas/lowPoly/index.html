@@ -5,8 +5,190 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Low Poly</title>
+    <script src="sobel.js"></script>
+    <script src="delaunay.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        html,body {
+            width:100%;
+            height:100%;
+        }
+        .btn_box {
+            padding-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        #file {
+            display: none;
+        }
+        .btn {
+            display: block;
+            width: 40%;
+            height: 50px;
+            text-align: center;
+            line-height: 50px;
+            border: 1px solid;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration:none;
+        }
+        .image_box {
+            position: relative;
+            margin: 20px 0;
+        }
+        canvas {
+            max-width: 100%;
+            margin: 10px auto;
+            display: block;
+        }
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+            color: #fff;
+            font-size: 30px;
+            display: none;
+        }
+        .show_loading {
+            display: block !important;
+        }
+    </style>
 </head>
 <body>
-    
+    <div class="btn_box">
+        <div id="upload" class="btn">上传图片</div>
+        <a id="download" class="btn" download="downImg" href="">下载图片</a>
+        <input type="file" id="file" accept="image/*"/>
+    </div>
+    <div class="image_box">
+        <canvas id="cvs"></canvas>
+        <div id="loading">loading...</div>
+    </div>
+    <script>
+        var input = document.getElementById('file');
+        var loading = document.getElementById('loading');
+        var upload = document.getElementById('upload');
+        var canvas = document.getElementById('cvs');
+        var ctx = canvas.getContext('2d');
+
+        var jxdvalue = 50;      //精细度，值越小，图片越精细
+
+        upload.onclick = function() { input.click() }; 
+
+        var img = new Image();
+        img.src = './test.jpg';
+        img.onload = function() {
+            parse(this);
+        };
+
+        input.onchange = function() {
+            if (!this.files.length) return;
+
+            var file = this.files[0];
+
+            if (!/\/(?:jpeg|png)/i.test(file.type)) {
+                alert("图片需为JPG或者PNG格式");
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.onload = function() {
+                var img = new Image();
+                img.src = this.result;
+
+                img.onload = function() {
+                    parse(this);
+                }
+            }
+
+            reader.readAsDataURL(file);
+        }
+
+        function parse(img) {
+            loading.className = "show_loading";
+            canvas.width = (img.width > 800) ? 800 : img.width;
+            canvas.height = img.height * canvas.width / img.width;
+
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // 开始转换
+            setTimeout(function() {
+                var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                
+                // 边缘检测算法 Sobel 收集亮度大于40的边缘点
+                var collect = [];
+                Sobel(imgData, function(value, x, y) {
+                    if (value > 40) {
+                        collect.push([x, y]);
+                    }
+                });
+
+                // 添加随机点
+                var randomArr = [];
+                for (var i = 0; i < 300; i++) {
+                    randomArr.push([Math.random() * canvas.width, Math.random() * canvas.height]);
+                }
+
+                // 随机添加边缘点,个数为总数/jxdvalue  ~~ << 0 向下取整
+                var length = ~~(collect.length/jxdvalue), random;
+                for(var j = 0; j < length; j++) {
+                    random = (Math.random() * collect.length) << 0;
+                    randomArr.push(collect[random]);
+                    collect.splice(random,1);
+                }
+
+                // 添加 canvas 四个顶点坐标
+                randomArr.push([0, 0], [0, canvas.height], [canvas.width, 0], [canvas.width, canvas.height]);
+
+                // delaunay 获取三角坐标
+                var triangles = Delaunay.triangulate(randomArr);
+
+                // 
+                var x1, x2, x3, y1, y2, y3, cx, cy;
+                for (var i = 0; i < triangles.length; i += 3) {
+                    x1 = randomArr[triangles[i]][0];
+                    x2 = randomArr[triangles[i + 1]][0];
+                    x3 = randomArr[triangles[i + 2]][0];
+                    y1 = randomArr[triangles[i]][1];
+                    y2 = randomArr[triangles[i + 1]][1];
+                    y3 = randomArr[triangles[i + 2]][1];
+
+                    // 获取三角形中心点坐标
+                    cx = ~~((x1 + x2 + x3) / 3);
+                    cy = ~~((y1 + y2 + y3) / 3);
+            
+                    // 获取中心点坐标的颜色值
+                    var index = (cy * imgData.width + cx) * 4;
+                    var color_r = imgData.data[index];
+                    var color_g = imgData.data[index + 1];
+                    var color_b = imgData.data[index + 2];
+            
+                    // 绘制三角形
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.lineTo(x3, y3);
+                    ctx.closePath();
+                    ctx.fillStyle = "rgba(" + color_r + "," + color_g + "," + color_b + ",1)";
+                    ctx.fill();
+                    ctx.restore();
+                }
+                
+                // 隐藏 loading
+                loading.className = "";
+
+                // 提供下载
+                var dataURL = canvas.toDataURL("image/png");
+                var a = document.getElementById("download");
+                a.setAttribute("href",dataURL);
+            }, 50);
+        }
+    </script>
 </body>
 </html>
