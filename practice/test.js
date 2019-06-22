@@ -33,15 +33,15 @@
  * 
  */
 // 得到一个两数之间的随机整数，包括两个数在内
-function getRandomIntInclusive(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min; //含最大值，含最小值 
-}
-// 随机生成10个整数数组, 排序, 去重
-let initArr = Array.from({ length: 10 }, (v) => { return getRandomIntInclusive(0, 99) });
-initArr.sort((a, b) => { return a - b });
-initArr = [...(new Set(initArr))];
+// function getRandomIntInclusive(min, max) {
+//     min = Math.ceil(min);
+//     max = Math.floor(max);
+//     return Math.floor(Math.random() * (max - min + 1)) + min; //含最大值，含最小值 
+// }
+// // 随机生成10个整数数组, 排序, 去重
+// let initArr = Array.from({ length: 10 }, (v) => { return getRandomIntInclusive(0, 99) });
+// initArr.sort((a, b) => { return a - b });
+// initArr = [...(new Set(initArr))];
 
 // 放入hash表 除以10分类
 // let obj = {};
@@ -59,12 +59,84 @@ initArr = [...(new Set(initArr))];
 // console.log(resArr);
 
 // 连续元素分类
-let continueArr = [], tempArr = [];
-initArr.map((e, index) => {
-    tempArr.push(e);
-    if (initArr[index+1] !== ++e) {
-        continueArr.push(tempArr);
-        tempArr = [];
+// let continueArr = [], tempArr = [];
+// initArr.map((e, index) => {
+//     tempArr.push(e);
+//     if (initArr[index+1] !== ++e) {
+//         continueArr.push(tempArr);
+//         tempArr = [];
+//     }
+// });
+// console.log(continueArr);
+
+
+// let list = [{
+//     id: '1',
+//     children: [{
+//         id: '11',
+//         children: [{
+//             id: '111'
+//         }, {
+//             id: '112'
+//         }]
+//     }]
+// }];
+
+// function fn(value) {
+//     // 回溯的标记
+//     let _p = Symbol('parent');
+//     // 找到子节点
+//     let result;
+//     function _fn(arr, p) {
+//         for (let i = 0; i < arr.length; i++) {
+//             arr[i][_p] = p;
+//             console.log(arr);
+//             if (arr[i].id === value) {
+//                 result = arr[i];
+//                 return;
+//             }
+//             !result && arr[i].children && _fn(arr[i].children, arr[i])
+//         }
+//         if (result) return;
+//     }
+//     _fn(list, null);
+    
+//     console.log(result);
+
+//     let tmp = [];
+//     if (!result) return null;
+//     while (result) {
+//         tmp.unshift(result.id);
+//         result = result[_p];
+//     }
+//     return tmp;
+// }
+// console.log(fn('112'));
+
+// 快慢指针
+function st(a, b) {
+    let m = 0, n = 0;
+    const arr = [];
+    
+    while(n < b.length) {
+        if (a[m] > b[n]) {
+            arr.push(b[n]);
+            n++;
+            if (n === b.length) {
+                arr.push(...a.slice(m));
+                break;
+            }
+        } else {
+            arr.push(a[m]);
+            m++;
+            if (m === a.length) {
+                arr.push(...b.slice(n));
+                break;
+            }
+        }
     }
-});
-console.log(continueArr);
+
+    return arr;
+}
+
+console.log(st([1,2],[3,5]));
