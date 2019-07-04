@@ -114,29 +114,56 @@
 // console.log(fn('112'));
 
 // 快慢指针
-function st(a, b) {
-    let m = 0, n = 0;
-    const arr = [];
+// function st(a, b) {
+//     let m = 0, n = 0;
+//     const arr = [];
     
-    while(n < b.length) {
-        if (a[m] > b[n]) {
-            arr.push(b[n]);
-            n++;
-            if (n === b.length) {
-                arr.push(...a.slice(m));
-                break;
-            }
-        } else {
-            arr.push(a[m]);
-            m++;
-            if (m === a.length) {
-                arr.push(...b.slice(n));
-                break;
-            }
+//     while(n < b.length) {
+//         if (a[m] > b[n]) {
+//             arr.push(b[n]);
+//             n++;
+//             if (n === b.length) {
+//                 arr.push(...a.slice(m));
+//                 break;
+//             }
+//         } else {
+//             arr.push(a[m]);
+//             m++;
+//             if (m === a.length) {
+//                 arr.push(...b.slice(n));
+//                 break;
+//             }
+//         }
+//     }
+
+//     return arr;
+// }
+
+// console.log(st([1,2],[3,5]));
+
+function double(value) {
+    return new Promise(resolve => {
+        resolve(value * 2);
+    });
+}
+
+Array.prototype.filterx = function(f) {
+    let result = [];
+    
+    for (let i = 0; i < this.length; i++) {
+        console.log('start', f(this[i]));
+        if (f(this[i])) {
+            result.push(this[i]);
+            // console.log('inner', result);
         }
     }
 
-    return arr;
+    return result;
 }
 
-console.log(st([1,2],[3,5]));
+const arr = [1, 2, 3, 4, 5, 6, 7, 8];
+console.log(arr.filterx(value => {
+    var x = double(value);
+    console.log(x);
+    return x == 4;
+})); 
