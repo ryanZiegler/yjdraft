@@ -24,16 +24,22 @@ function curry(func) {
  */
 function add() {
     let args = [].slice.call(arguments);
-    let fn = function(){
-        let fn_args = [].slice.call(arguments)
-        return add.apply(null,args.concat(fn_args))
+    let fn = function() {
+        if (!arguments.length) {
+            console.log(args.reduce((a,b)=> a + b));
+        }
+        
+        let fn_args = [].slice.call(arguments);
+
+        return add.apply(null,args.concat(fn_args));
     }
   
-    fn.toString = function(){
-        return args.reduce((a,b)=>a+b)
+    fn.toString = function() {
+        return args.reduce((a,b)=> a + b);
     }
     
     return fn;
 }
 
-  console.log(add(1,2)(3)(4).toString());
+  console.log(add(1)(2,3)(4,5,6)(7,8,9,10).toString());
+  add(1)(2,3)(4,5,6)(7,8,9,10)();

@@ -81,10 +81,10 @@ function Test2(arr) {
     A.myApply(this, arr);
 }
 
-// var test1 = new Test2(['ego', '前端抠脚师']);
+var test2 = new Test2(['oge', '前端修脚师']);
 Test2(['ego', '前端抠脚师']);
-console.log(test1.fn);
-test1.introduce();
+console.log(test2.fn);
+test2.introduce();
 
 console.log('--------bind--------');
 var Tools = {

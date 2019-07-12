@@ -1,34 +1,35 @@
 /**
  *  节流
  */
-let mark = false;
-let canRun = true;
-
-function throttle(time) {
-    mark = true;
-    if (!canRun) reutrn;
-    
-    // 执行具体函数
-    canRun = false;
-    mark = false;
-
-    setTimeout(function() {
-        canRun = true;
-        if (mark && canRun) {
-            throttle(time);
+function throttle(func, wait = 50) {
+    // 上一次函数执行时间
+    let lastTime = 0;
+    return function(...args) {
+        let now = +new Date();
+        if (now - lastTime > wait) {
+            lastTime = now;
+            func.apply(this, args);
         }
-    }, time);
+    }
 }
+
+setInterval(
+    throttle(() => {
+        console.log(1)
+    }, 500),
+    1
+)
 
 /**
  *  防抖
  */
-function antiShake() {
+function debounce(func, wait = 50) {
     let timer = null;
-    return function() {
-        clearInterval(timer);
+    return function(...args) {
+        if (timer) clearInterval(timer);
         timer = setTimeout(() => {
             // 执行具体函数
-        }, 500);
+            func.apply(this, ...args);
+        }, wait);
     };
 }

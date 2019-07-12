@@ -25,7 +25,7 @@ Array.prototype.myReduce = function() {
     return value;
 };
 
-console.log([1, 3, 5].myReduce((i, j) => { return i * j }));
+console.log([1, 3, 5].myReduce((i, j) => { return i * j }, 5));
 
 // use reduce realize map
 Array.prototype.myMap = function() {
