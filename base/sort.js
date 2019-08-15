@@ -19,6 +19,8 @@ function bubbleSort(arr) {
     }
 };
 
+// 优化 1:记录此次是否交换  2.最后一次交换的位置  3.正反交替扫描最大值/最小值
+
 const bubbleArr = [6,3,8,2,9,1];
 bubbleSort(bubbleArr);
 console.log('冒泡排序: ', bubbleArr);

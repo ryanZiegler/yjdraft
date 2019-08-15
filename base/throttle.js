@@ -26,7 +26,7 @@ setInterval(
 function debounce(func, wait = 50) {
     let timer = null;
     return function(...args) {
-        if (timer) clearInterval(timer);
+        if (timer) clearTimeout(timer);
         timer = setTimeout(() => {
             // 执行具体函数
             func.apply(this, ...args);
