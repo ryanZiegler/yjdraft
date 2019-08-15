@@ -1,3 +1,5 @@
+import { reject } from "async";
+
 // 原生js发送请求
 const xhr = new XMLHttpRequest();
 // get请求参数放在url中; post请求放在data中
@@ -41,3 +43,33 @@ xhr.onreadystatechange = function() {
         }
     }
 }
+
+
+// 运用 Promise 封装 ajax
+// GET方法
+function promiseGet(url) {
+    return new Promise((resolve, reject) => {
+        // 兼容IE
+        const xhr = XMLHttpRequest ? new XMLHttpRequest() : new window.ActiveXObject('Microsoft.XMLHTTP');
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                    try {
+                        //获取数据
+                        const response = JSON.parse(xhr.responseText);
+                        resolve(response);
+                    } catch (e) {
+                        reject(e);
+                    }
+                } else {
+                    reject(new Error("Request was unsuccessful: " + xhr.statusText));
+                }
+            }
+        }
+        xhr.open('GET', url + '?' + data, true);
+        xhr.send();
+    });
+}
+
+promiseGet(url).then(res => console.log(res));
