@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Love,Death&Robots</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
+    <style>
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        min-height: 100vh;  /* vh就是当前屏幕可见高度的1%, 100vh即 100%, 当元素没有内容时候,设置height:100%该元素不会被撑开,但是设置height:100vh，该元素会被撑开屏幕高度一致。*/
+        background: #111;
+        margin: 0;          /* body默认margin为 8px */
+        padding: 0;
+    }
+    .app {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        overflow: hidden;
+    }
+    .cloak {
+        width: 100vw;
+        height: 400vh;
+        transform: translate(0, 100%);
+        background: linear-gradient(180deg, #fff, #fff 50%, #111 50%);       /* linear-gradient(direction, color-stop1, color-stop2, ...); 方向/角度 颜色渐变值 */
+        position: absolute;
+        top: 0;
+        z-index: 2;
+    }
+    .container {
+        width: 300px;
+        height: 160px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+    }
+    .mouth {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 20px;
+        background: #fff;
+        transform: scaleX(0.5); 
+    }
+    .eyes {
+        width: 70px;
+        height: 70px;
+        position: absolute;
+        left: 175px;
+    }
+    .__piece {
+        width: 30%;
+        height: 105%;
+        background: #fff;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+    }
+    .--curved {
+        border-radius: 20px;
+        height: 120%;
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+    .heart {
+        width: 76px;
+        height: 68px;
+        position: absolute;
+        left: 55px;
+    }
+    .heart::after,
+    .heart::before {
+        content: '';
+        width: 50%;
+        height: 100%;
+        background: #fff;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(42deg) translate(4px, -8px);
+        border-radius: 20px 20px 0 0/20px 20px 0 0;
+        /* --clip: polygon(0 0, 100% 0, 100% 100%, 0 94%); */
+        -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 94%);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 94%);
+    }
+    .heart::before {
+        transform: translate(-50%, -50%) rotate(42deg) translate(4px, -8px) rotate(-84deg) rotateY(180deg) translate(13px, -12px);
+    }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="container">
+            <div class="heart"></div>
+            <div class="eyes">
+                <div class="__piece --curved"></div>
+                <div class="__piece --straight"></div>
+            </div>
+            <div class="mouth"></div>
+        </div>
+        <div class="cloak"></div>
+    </div>
+    <script>
+        const { TimelineMax, TweenMax } = window;
+        // 获取元素
+        const heart = document.querySelector('.heart');
+        const eyes = document.querySelector('.eyes');
+        const curved = document.querySelector('.--curved');
+        const straight = document.querySelector('.--straight');
+        const mouth = document.querySelector('.mouth');
+        const cloak = document.querySelector('.cloak');
+
+        /** 
+         *  动画时间轴
+         *  TimelineMax( vars:Object )
+         *  delay 延迟秒数
+         *  repeat 重复次数
+         *  repeatDelay 重复间隔秒数
+         *  onComplete 时间轴结束执行回调函数
+         * 
+         *  TimelineMax().add( value:*, position:*, align:String, stagger:Number )
+         *  向时间轴添加动画、其他时间轴、回调函数或标签（或它们的数组）。
+         *  value 添加的动画、时间轴、回调函数或标签/数组
+         *  position 插入点 秒绝对位置/ +=相对位置/ 标签 +=
+         *  align 序列方式(仅当value为数组时)
+         *  stagger 序列时间间隔(或帧),仅当value为数组时
+         */
+        const timeline = new TimelineMax({ delay: 1, repeat: -1, repeatDelay: 1 });
+
+        /**
+         *  心跳 添加一个动画到时间轴
+         *  TimelineMax().to( target:Object, duration:Number, vars:Object, position:* )
+         *  target 目标元素/元素数组
+         *  duration 持续时间
+         *  vars 动画属性
+         *  positon 插入点 默认时间轴末尾
+         */
+        const beat = delay =>
+            new TimelineMax({ delay })
+                .to(heart, 0.1, { scale: 0.85 })
+                .to(heart, 0.1, { scale: 0.95 })
+                .to(heart, 0.1, { scale: 0.85 })
+                .to(heart, 0.1, { scale: 1 });
+
+        // eyes旋转
+        const rotate = () => 
+            new TimelineMax()
+                .to(eyes, 0.4, { rotation: 45 })
+                .to(eyes, 0.4, { rotation: 90 })
+                .to(eyes, 0.4, { rotation: 135 })
+                .to(eyes, 0.4, { rotation: 180 });
+
+        /**
+         *  设置动画起始点
+         *  TweenMax.from( target:Object, duration:Number, vars:Object )
+         *  target 设置点/数组
+         *  duration 持续时间
+         *  vars 动画属性
+         */
+        timeline
+            .add(TweenMax.from(heart, 0.15, { scale: 0 }))
+            .add(beat(), 1.2)
+            .add(beat(0.25))
+            .add(beat(0), 3.6)
+            .add(TweenMax.from(straight, 0.3, { x: -innerWidth, y: -innerWidth }), 0.9)
+            .add(TweenMax.from(curved, 0.3, { x: innerWidth, y: -innerWidth }), 1.1)
+            .add(rotate(), 2.75)
+            .add(TweenMax.from(mouth, 0.3, { scaleX: 1, x: -innerWidth }), 2.75)
+            .add(TweenMax.to(mouth, 0.25, { scaleX: 1 }, 3.4))
+            .add(TweenMax.to(mouth, 0.25, { height: innerHeight }))
+            .add(TweenMax.to(cloak, 0.5, { y: '-50%' }), 4.8)
+    </script>
+</body>
+</html>

@@ -12,6 +12,7 @@ EventEmeitter.prototype.emit = function(type, ...args) {
     handler = this._events.get(type);
 
     if (Array.isArray(handler)) {
+        // 如果是一个数组说明有多个监听者,需要依次此触发里面的函数
         for (let i = 0; i < handler.length; i++) {
             if (args.length > 0) {
                 handler[i].apply(this, args);
@@ -28,7 +29,7 @@ EventEmeitter.prototype.emit = function(type, ...args) {
     }
 
     return true;
-}
+} 
 
 // 监听 type 事件
 EventEmeitter.prototype.addListener = function(type, fn) {
@@ -82,3 +83,4 @@ emitter.addListener('test', (test) => {
 });
 
 emitter.emit('test', 'hello');
+emitter.emit('test', 'bye');
