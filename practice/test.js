@@ -186,26 +186,62 @@
 
 // console.log(trans(135454123456));
 
-let str = '1,2,3,5,7,8,10';
-function transform(str) {
-    let res = [];
-    let arr = str.split(',').map(i => +i);
+// let str = '1,2,3,5,7,8,10';
+// function transform(str) {
+//     let res = [];
+//     let arr = str.split(',').map(i => +i);
 
-    let temp = arr[0];
+//     let temp = arr[0];
 
-    arr.forEach((value, index) => {
-        if (value + 1 !== arr[index + 1]) {
-            if (temp !== value) {
-                res.push(`${temp}~${value}`)
-            } else {
-                res.push(`${value}`)
-            }
-            temp = arr[index + 1]
-          }
-    });
+//     arr.forEach((value, index) => {
+//         if (value + 1 !== arr[index + 1]) {
+//             if (temp !== value) {
+//                 res.push(`${temp}~${value}`)
+//             } else {
+//                 res.push(`${value}`)
+//             }
+//             temp = arr[index + 1]
+//           }
+//     });
 
-    return res.join(',');
-}
+//     return res.join(',');
+// }
 
-console.log(transform(str));
+// console.log(transform(str));
 
+// const fn = arr => {
+//     const res = []
+//     const map = arr.reduce((res, item) => ((res[item.id] = Object.assign({}, item)), res), {})
+//     console.log(map);
+//     console.log(Object.values(map));
+//     for (const item of Object.values(map)) {
+//       if (!item.pId) {
+//         res.push(item)
+//       } else {
+//         const parent = map[item.pId]
+//         parent.child = parent.child || []
+//         parent.child.push(item)
+//       }
+//     }
+//     console.log(arr);
+//     return res
+// }
+  
+// const arr = [{id: 1}, {id:2, pId: 1}, {id: 3, pId: 2}, {id: 4}, {id:3, pId: 2}, {id: 5, pId: 4}]
+// console.log(fn(arr)) // [{id: 1, child: [{id: 2, pId: 1, child: [{ id: 3, pId: 2}]}]}, {id: 4, child: [{id: 5, pId: 4}]}]
+
+let arr = [1,2,3,4,5,6,7,8,9,10,11,12,13],
+// let arr = [1,2,3],
+    origin = [],
+    i = 1;
+
+while(arr.length) {
+    if (i % 2) {
+        origin.unshift(arr.pop());
+    } else {
+        origin.unshift(origin.pop());
+    }
+    i++
+} 
+
+console.log(origin);
