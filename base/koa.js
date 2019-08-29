@@ -26,3 +26,14 @@ class Koa {
     }
 }
 
+// Koa2源码分为四大模块
+// application extend Event
+//     listen app.listen => http.createServer(app.callback()).listen(...)
+//     use 添加中间件,存储在middleware中,返回this,方便链式调用(判断是否generator组件,通过convert转化)
+//     callback 合并中间件,创建请求上下文对象以及返回请求处理函数
+//         compose 返回 handleRequest => app.createContext 创建请求上下文
+//         koa-compose 组合所有中间件,通过Promise串联柯里化成单个中间件函数
+// context 封装了request/response代理其方法/属性
+//     onerror 清空响应头,抛出err给app实例
+// Request
+// Response
