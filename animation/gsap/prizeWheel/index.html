@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>轮盘抽奖</title>
+    <style>
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        min-height: 100vh;  /* vh就是当前屏幕可见高度的1%, 100vh即 100%, 当元素没有内容时候,设置height:100%该元素不会被撑开,但是设置height:100vh，该元素会被撑开屏幕高度一致。*/
+        margin: 0;          /* body默认margin为 8px */
+        padding: 0;
+    }
+    .app {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+    .container {
+        width: 300px;
+        height: 300px;
+        position: absolute;  
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        /* clip-path: circle(); */
+        /* background: linear-gradient(0deg, #F1EAD9 50%, black 50%); */
+        /* background: #F1EAD9; */
+    }
+    .wheel {
+        width: 150px;
+        height: 300px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        background: transparent;
+        border-radius: 0 150px 150px 0;
+        overflow: hidden;
+        transform-origin: left center;
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    .inner {
+        width: 150px;
+        height: 300px;
+        background: #D3E3C5;
+        transform-origin: right center;
+        transform: translate(-100%, 0) rotate(99deg);
+    }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="container">
+            <div class="wheel">
+                <div class="inner"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
