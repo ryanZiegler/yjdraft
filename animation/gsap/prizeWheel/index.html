@@ -37,6 +37,8 @@
     .start-rotate {
         transition: transform 1.5s ease-in;
         transform: rotate(360deg) !important;
+    }
+    .keep-rotate {
         animation: start_rotate .8s linear 1.5s infinite forwards;
     }
     @keyframes start_rotate {
@@ -47,6 +49,9 @@
             transform: rotate(360deg);
             -webkit-transform: rotate(360deg);
         }
+    }
+    .stop-rotate {
+        transition: transform 1.5s ease-out;
     }
     .wheel {
         width: 50%;
@@ -99,15 +104,22 @@
         // debugger;
         const start = function() {
             wheelBox.classList.add('start-rotate');
-            // 利用setTimeout模拟异步请求
-            setTimeout(function() {
-                console.log('抽中250');
-                wheelBox.classList.remove('start-rotate');
-                wheelBox.removeEventListener('click', start);
-                wheelBox.style.animation = '';
-                // wheelBox.style.animation = '';
-            }, 10 * 1000);
+            wheelBox.classList.add('keep-rotate');
+            wheelBox.removeEventListener('click', start);
+            stop();
         }
+        // 利用setTimeout模拟异步请求
+        const stop = function() {
+            setTimeout(function() {
+                wheelBox.classList.add('stop-rotate');
+                wheelBox.classList.remove('keep-rotate');
+                
+                setTimeout(function() {
+                    wheelBox.style.cssText  += ';transform:rotate(732deg) !important';
+                }, 10);
+            }, 5 * 1000);
+        }
+        
         wheelBox.addEventListener('click', start);
     </script>
 </body>
