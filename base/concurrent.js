@@ -1,6 +1,3 @@
-import { resolve } from "dns";
-import { reject } from "async";
-
 class Concurrently {
     constructor(taskLimit) {
         if (taskLimit < 0) {
