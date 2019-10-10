@@ -77,7 +77,8 @@
         let light;
         function initLight() {
             light = new THREE.DirectionalLight(0xFF0000, 1.0, 0);
-            light.position.set(100, 100, 200);
+            // light = new THREE.AmbientLight(0x404040);
+            light.position.set(500, 500, 500);
             scene.add(light);
         }
 
@@ -145,18 +146,31 @@
             const extrudeSettings = {
                 curveSegments: 50,              // 曲线上点的数量，默认值是12
                 // depth: 150,                  // 挤出的形状的深度，默认值为100
-                amount: 50,
+                amount: 50,                     
+                steps: 2,                       // 挤出的形状的层数
                 bevelEnabled: true,
                 bevelSegments: 2,
-                steps: 2,
-                bevelSize: 1,
+                bevelSize: 0,
                 bevelThickness: 1
             };
 
+            const colorMap = [
+                0x01B5FF,                   // 蓝
+                0xC01F2F,                   // 红
+                0xFFB5CC                    // 粉
+            ];
             let positionZ = -150;
             for(let i = 0; i < 3;i++) {
+                let mesh;
                 const geometry = new THREE.ExtrudeGeometry( nikeShape, extrudeSettings );
-                const mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial() );
+                if (i === 2) {
+                    let color = [];
+                    color.push(new THREE.MeshLambertMaterial({ emissive: 0xFFB5CC }));
+                    color.push(new THREE.MeshLambertMaterial({ emissive: 0xFF1804 }));
+                    mesh = new THREE.Mesh( geometry, new THREE.MultiMaterial(color) );
+                } else {
+                    mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({ emissive: colorMap[i] }) );
+                }
                 mesh.position.z = positionZ;
                 scene.add(mesh);
                 positionZ += 50;
@@ -182,7 +196,7 @@
             initCamera();
             initScene();
             initHelper();
-            initLight();
+            // initLight();
             initControls();
             // initObject();
             drawShape();
