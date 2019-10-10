@@ -18,24 +18,46 @@
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
         // 渲染器
         const renderer = new THREE.WebGLRenderer();
+
+        // 生成网格
+        const helper = new THREE.GridHelper(1000, 50, 0x0000ff, 0x808080);
+        // helper.setColors( 0x0000ff, 0x808080 );
+        scene.add( helper );
         
         renderer.setSize(window.innerWidth, window.innerHeight);
         
         // 渲染器renderer的domElement元素，表示渲染器中的画布
         document.body.appendChild(renderer.domElement);
 
-        const geometry = new THREE.CubeGeometry(1,1,1);
-        const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+        const geometry = new THREE.CubeGeometry(100,100,100);
+        // geometry中有一个face成员，用来存储这个Geometry包含的面。每个面(face)有一个color属性，表示这个面的颜色。
+        for (let i = 0;i < geometry.faces.length;i += 2 ) {
+            const hex = Math.random() * 0xffffff;
+            geometry.faces[i].color.setHex( hex );
+            geometry.faces[i + 1].color.setHex( hex );
+        }
+        const material = new THREE.MeshBasicMaterial({vertexColors: THREE.FaceColors});
         const cube = new THREE.Mesh(geometry, material); 
         scene.add(cube);
+        
+        // 摄影机位置
+        camera.position.x = 200;
+        camera.position.y = 200;
+        camera.position.z = 200;
+        // 相机镜头指向 默认z轴负方向
+        camera.lookAt({
+            x: 0,
+            y: 0,
+            z: 0
+        });
 
-        camera.position.z = 5;
         function render() {
             requestAnimationFrame(render);
             cube.rotation.x += 0.1;
             cube.rotation.y += 0.1;
             renderer.render(scene, camera);
         }
+
         render();
     </script>
 </body>
