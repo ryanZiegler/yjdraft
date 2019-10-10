@@ -11,7 +11,8 @@
             background-color: #EEEEEE;
         }
     </style>
-    <script src="https://cdn.bootcss.com/three.js/r83/three.js"></script>
+    <script src="https://cdn.bootcss.com/three.js/r83/three.min.js"></script>
+    <script src="./OrbitControls.js"></script>
     <script src="https://cdn.bootcss.com/stats.js/r16/Stats.js"></script>
     <script>
         // 性能监视器
@@ -53,16 +54,24 @@
             camera.up.y = 1;
             camera.up.z = 0;
             // 相机镜头指向 默认z轴负方向
-            camera.lookAt({
-                x: 100,
-                y: 100,
-                z: 0
-            })
+            // 设置 OrbitControls 后貌似失效
+            // camera.lookAt({
+            //     x: 100,
+            //     y: 100,
+            //     z: 0
+            // })
         }
         
         let scene;
         function initScene() {
             scene = new THREE.Scene();
+        }
+
+        let controls;
+        function initControls() {
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            // 摄像机旋转缩放焦点
+            controls.target = new THREE.Vector3(100, 100, 0);
         }
         
         let light;
@@ -134,9 +143,9 @@
 
             // 挤压几何体 参数
             const extrudeSettings = {
-                curveSegments: 20,              // 曲线上点的数量，默认值是12
-                depth: 150,                     // 挤出的形状的深度，默认值为100
-                amount: 8,
+                curveSegments: 50,              // 曲线上点的数量，默认值是12
+                // depth: 150,                  // 挤出的形状的深度，默认值为100
+                amount: 50,
                 bevelEnabled: true,
                 bevelSegments: 2,
                 steps: 2,
@@ -144,14 +153,25 @@
                 bevelThickness: 1
             };
 
-            const geometry = new THREE.ExtrudeGeometry( nikeShape, extrudeSettings );
+            let positionZ = -150;
+            for(let i = 0; i < 3;i++) {
+                const geometry = new THREE.ExtrudeGeometry( nikeShape, extrudeSettings );
+                const mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial() );
+                mesh.position.z = positionZ;
+                scene.add(mesh);
+                positionZ += 50;
+            }
 
-            const mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial() );
-            scene.add(mesh);
+            // const geometry = new THREE.ExtrudeGeometry( nikeShape, extrudeSettings );
+
+            // const mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial() );
+            // mesh.position.z = -300;
+            // scene.add(mesh);
         }
 
         function render() {
             renderer.clear();
+            // controls.update();
             renderer.render(scene,  camera);
             requestAnimationFrame(render);
         }
@@ -163,7 +183,8 @@
             initScene();
             initHelper();
             initLight();
-            initObject();
+            initControls();
+            // initObject();
             drawShape();
             render();
         }
