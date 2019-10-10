@@ -45,8 +45,8 @@
             // PerspeactiveCamera(fov, aspect, near, far) 透视相机(视场, 长宽比, 近面, 远面) 
             camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
             // 相机位置
-            camera.position.x = 250;
-            camera.position.y = 90;
+            camera.position.x = 100;
+            camera.position.y = 100;
             camera.position.z = 500;
             // 相机上方朝向
             camera.up.x = 0;
@@ -54,8 +54,8 @@
             camera.up.z = 0;
             // 相机镜头指向 默认z轴负方向
             camera.lookAt({
-                x: 250,
-                y: 90,
+                x: 100,
+                y: 100,
                 z: 0
             })
         }
@@ -70,6 +70,12 @@
             light = new THREE.DirectionalLight(0xFF0000, 1.0, 0);
             light.position.set(100, 100, 200);
             scene.add(light);
+        }
+
+        let helper;
+        function initHelper() {
+            helper = new THREE.GridHelper(1000, 50, 0x0000ff, 0x808080);
+            scene.add(helper);
         }
         
         let cube;
@@ -120,6 +126,30 @@
             // scene.add(line);
         }
 
+        function drawShape() {
+            const nikeShape = new THREE.Shape();
+            nikeShape.moveTo(75, 180);
+            nikeShape.bezierCurveTo( 80, 195, -155, -95, 370, 180);
+            nikeShape.bezierCurveTo( 40, 55, 55, 125, 75, 180);
+
+            // 挤压几何体 参数
+            const extrudeSettings = {
+                curveSegments: 20,              // 曲线上点的数量，默认值是12
+                depth: 150,                     // 挤出的形状的深度，默认值为100
+                amount: 8,
+                bevelEnabled: true,
+                bevelSegments: 2,
+                steps: 2,
+                bevelSize: 1,
+                bevelThickness: 1
+            };
+
+            const geometry = new THREE.ExtrudeGeometry( nikeShape, extrudeSettings );
+
+            const mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial() );
+            scene.add(mesh);
+        }
+
         function render() {
             renderer.clear();
             renderer.render(scene,  camera);
@@ -131,8 +161,10 @@
             initThree();
             initCamera();
             initScene();
+            initHelper();
             initLight();
             initObject();
+            drawShape();
             render();
         }
     </script>
