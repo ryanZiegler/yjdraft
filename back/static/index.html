@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>文件上传demo</title>
+    <style>
+        h4 {
+            color: red;
+        }
+        #progress {
+            width: 400px;
+        }
+        .red {
+            display: block;
+            background-color: red;
+        }
+        .green {
+            display: block;
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>原始文件上传</h1>
+    <h2>form表单上传文件</h2>
+    <h4>input标签 multiple属性决定单/多文件上传</h4>
+    <form method="POST" action="http://localhost:8088/uploads" enctype="multipart/form-data">
+        <input type="file" name="ep1" multiple>
+        <button type="submit" id="btn-0">上传</button>
+    </form>
+
+    <h2>局部刷新上传 - iframe</h2>
+    <h4>iframe隐藏,form target属性设置为iframe name属性,跳转动作即在iframe完成</h4>
+    <h4>iframe添加load事件,页面内容转换为JSON即接口返回数据</h4>
+    <iframe id="temp-iframe" name="temp-iframe" style="display: none"></iframe>
+    <form method="POST" target="temp-iframe" action="http://localhost:8088/uploads" enctype="multipart/form-data">
+        <input type="file" name="ep1" multiple>
+        <button type="submit" id="btn-0">上传</button>
+    </form>
+
+    <h2>无刷新上传 - xhr - 进度条</h2>
+    <h4>XMLHttpRequest 读取上传二进制数据,也可以使用 Fetch</h4>
+    <div>
+        <input type="file" id="f1" multiple/>
+        <button type="submit" id="xhr-submit">xhr上传</button>
+        <button type="submit" id="fetch-submit">fetch上传</button>
+        <div id="progress">
+            <span class="red"></span>
+        </div>
+    </div>
+
+    <h2>多文件上传 - 预览 - 取消</h2>
+    <h4>调用xhr.abort()终止上传</h4>
+    <h4>使用window.URL.createObjectURL预览图片，在图片加载成功后需要清除使用的内存window.URL.revokeObjectURL(this.src);</h4>
+
+
+
+
+
+
+
+<script>
+    // iframe 局部刷新上传
+    const tempIframe = document.getElementById('temp-iframe');
+    tempIframe.addEventListener('load', function() {
+        const result = tempIframe.contentWindow.document.body.innerText;
+        const obj = JSON.parse(result);
+        console.log(obj);
+        if(obj && obj.fileUrl.length) {
+            console.log('上传成功');
+        }
+    });
+
+    // xhr 上传
+    function xhrSubmitUpload() {
+        // 进度条
+        const progressSpan = document.getElementById('progress').firstElementChild;
+        progressSpan.style.width = '0';
+        progressSpan.classList.remove('green');
+        // 获取文件列表
+        const { files: fileList } = document.getElementById('f1');
+        if (!fileList.length) {
+            alert('请选择文件');
+            return;
+        }
+        // 构造 FormData 对象
+        let fd = new FormData();
+        for(let i = 0; i < fileList.length; i++) {
+            fd.append('ep1', fileList[i]);
+        }
+        // xhr发送请求
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:8088/uploads', true);
+        // 发送时  Content-Type默认就是: multipart/form-data
+        xhr.onreadystatechange = function() {
+            console.log('上传状态:', xhr.readyState);
+            if(xhr.readyState === 4 && this.status === 200) {
+                console.log(xhr);
+                const obj = JSON.parse(xhr.responseText);
+                console.log(obj);
+                if(obj.fileUrl.length) {
+                    console.log('上传成功');
+                }
+            }
+        }
+
+        function updateProgress(event) {
+            console.log(event);
+            if (event.lengthComputable) {
+                const percent = (event.loaded / event.total * 100).toFixed(2);
+                progressSpan.style.width = percent + '%';
+                progressSpan.innerHTML = percent + '%';
+                if (percent > 90) {
+                    progressSpan.classList.add('green');
+                }
+                console.log('已上传',percent);
+            }
+        }
+        xhr.onprogress = updateProgress;
+        xhr.upload.onprogress = updateProgress;
+        // 注意 send 一定要写在最下面，否则 onprogress 只会执行最后一次
+        xhr.send(fd);
+    }
+    // fetch 上传
+    function fetchSubmitUpload() {
+        const { files: fileList } = document.getElementById('f1');
+        if (!fileList.length) {
+            alert('请选择文件');
+            return;
+        }
+
+        let fd = new FormData();
+        for(let i = 0; i < fileList.length; i++) {
+            fd.append('ep1', fileList[i]);
+        }
+        
+        fetch('http://localhost:8088/uploads', {
+            method: 'POST',
+            body: fd
+        })
+        .then(res => res.json())
+        .then(res => {
+            console.log(res);
+            if(res.fileUrl.length) {
+                alert('上传成功');
+            }
+        })
+        .catch(err => console.log('Error:', err));
+    }
+
+    document.getElementById('xhr-submit').addEventListener('click', xhrSubmitUpload);
+    document.getElementById('fetch-submit').addEventListener('click', fetchSubmitUpload);
+</script>
+</body>
+</html>
