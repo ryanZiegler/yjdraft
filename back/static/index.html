@@ -20,6 +20,14 @@
             display: block;
             background-color: green;
         }
+        .item {
+            display: inline-block;
+        }
+        img {
+            width: 300px;
+            height: 300px;
+            background-size: 100%;
+        }
     </style>
 </head>
 <body>
@@ -54,12 +62,20 @@
     <h2>多文件上传 - 预览 - 取消</h2>
     <h4>调用xhr.abort()终止上传</h4>
     <h4>使用window.URL.createObjectURL预览图片，在图片加载成功后需要清除使用的内存window.URL.revokeObjectURL(this.src);</h4>
+    <div>
+        <input type="file" id="preview" multiple/>
+        <button type="submit" id="btn-submit">上传</button>
+        <div id="img-box"></div>
+    </div>
 
+    <h2>大文件分片上传</h2>
+    <h4>Blob 对象表示原始数据,即二进制数据</h4>
+    <h4>File 继承了 Blob对象功能,通过slice即可操作</h4>
+    <input type="file" id="patch" />
+    <button id="big-submit">上传</button>
 
-
-
-
-
+    <h2>大文件上传-断点续传</h2>
+    
 
 <script>
     // iframe 局部刷新上传
@@ -96,7 +112,7 @@
         // 发送时  Content-Type默认就是: multipart/form-data
         xhr.onreadystatechange = function() {
             console.log('上传状态:', xhr.readyState);
-            if(xhr.readyState === 4 && this.status === 200) {
+            if(xhr.readyState === 4 && xhr.status === 200) {
                 console.log(xhr);
                 const obj = JSON.parse(xhr.responseText);
                 console.log(obj);
@@ -152,6 +168,174 @@
 
     document.getElementById('xhr-submit').addEventListener('click', xhrSubmitUpload);
     document.getElementById('fetch-submit').addEventListener('click', fetchSubmitUpload);
+
+    // 多文件上传 - 预览 - 取消
+    const maxUploadNum = 5;
+    const imgBox = document.getElementById('img-box');
+    const willUploadFile = [];
+    // 图片预览
+    document.getElementById('preview').addEventListener('change', function(e) {
+        const { files: fileList } = document.getElementById('preview');
+
+        if (willUploadFile.length > maxUploadNum || fileList.length > maxUploadNum || (willUploadFile.length + fileList.length > maxUploadNum)) {
+            alert('最多只能上传' + maxUploadNum + '张图');
+            return;
+        }
+
+        for (let i = 0; i < fileList.length; i++) {
+            const f = fileList[i];
+            const img = document.createElement('img');
+            const item = document.createElement('div');
+            const progress = document.createElement('div');
+            progress.className='progress';
+            progress.innerHTML = '<span class="red"></span><button type="button">Abort</button>';
+            item.className = 'item';
+            img.src = window.URL.createObjectURL(f);
+            img.onload = function () {
+                // 释放预览图片内存
+                window.URL.revokeObjectURL(this.src);
+            }
+            
+            item.appendChild(img);
+            item.appendChild(progress);
+            imgBox.appendChild(item);
+
+            willUploadFile.push({
+                file: f,
+                item,
+                progress
+            });
+        }
+    });
+
+    function submitUpload(willUploadFile) {
+        console.log(willUploadFile);
+        if(!willUploadFile.length) {
+            return;
+        }
+        // 遍历文件上传
+        willUploadFile.forEach(item => {
+            const progressSpan = item.progress.firstElementChild;
+            const btnCancel = item.progress.getElementsByTagName('button')[0];
+            // 取消上传按钮
+            const abortFn = function() {
+                if (xhr && xhr.readyState !== 400) {
+                    xhr.abort();
+                }
+            } 
+            btnCancel.removeEventListener('click', abortFn);
+            btnCancel.addEventListener('click', abortFn);
+
+            progressSpan.style.width = '0';
+            progressSpan.classList.remove('green');
+            // 构造FormData对象
+            let fd = new FormData();
+            fd.append('ep1',item.file);
+
+             // xhr发送请求
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', 'http://localhost:8088/uploads', true);
+            // 发送时  Content-Type默认就是: multipart/form-data
+            xhr.onreadystatechange = function() {
+                console.log('上传状态:', xhr.readyState);
+                if(xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr);
+                    const obj = JSON.parse(xhr.responseText);
+                    console.log(obj);
+                    if(obj.fileUrl.length) {
+                        console.log('上传成功');
+                    }
+                }
+            }
+
+            function updateProgress(event) {
+                console.log(event);
+                if (event.lengthComputable) {
+                    const percent = (event.loaded / event.total * 100).toFixed(2);
+                    progressSpan.style.width = percent + '%';
+                    progressSpan.innerHTML = percent + '%';
+                    if (percent > 90) {
+                        progressSpan.classList.add('green');
+                    }
+                    console.log('已上传',percent);
+                }
+            }
+            xhr.onprogress = updateProgress;
+            xhr.upload.onprogress = updateProgress;
+            // 注意 send 一定要写在最下面，否则 onprogress 只会执行最后一次
+            xhr.send(fd);
+        });
+    }
+    
+    document.getElementById('btn-submit').addEventListener('click', () => submitUpload(willUploadFile));
+
+    // 分片上传
+    const patchSumbit = function() {
+        // 分片大小
+        const chunkSize = 1024 * 1024 * 2;
+        const file = document.getElementById('patch').files[0];
+        // 保存分片数据
+        let chunks = [],
+            token = (+ new Date()),
+            name = file.name,
+            chunkCount = 0,
+            sendChunkCount = 0;
+        
+        // 拆分文件
+        if (file.size > chunkSize) {
+            let start = 0, end = 0;
+            while(true) {
+                end += chunkSize;
+                const blob = file.slice(start, end);
+                start += chunkSize;
+
+                if (!blob.size) {
+                    break;
+                }
+
+                chunks.push(blob);
+            }
+        } else {
+            chunks.push(file.slice(0));
+        }
+        // 分片片数
+        chunkCount = chunks.length;
+
+        for(let i = 0; i < chunks.length; i++) {
+            const fd = new FormData();
+            fd.append('token', token);
+            fd.append('ep1', chunks[i]);
+            fd.append('index', i);
+            xhrSend(fd, function() {
+                sendChunkCount += 1;
+                if (chunkCount === sendChunkCount) {
+                    // 合并分片请求
+                    const formD = new FormData();
+                    formD.append('type','merge');
+                    formD.append('token',token);
+                    formD.append('chunkCount',chunkCount);
+                    formD.append('filename',name);
+                    xhrSend(formD);
+                }
+            })
+            
+
+        }
+
+        function xhrSend(fd, cb) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'http://localhost:8088/uploads/patch', true);
+            xhr.onreadystatechange = function () {
+                console.log('state change', xhr.readyState);
+                if (xhr.readyState == 4) {
+                    console.log(xhr.responseText);
+                    cb && cb();
+                }
+            }
+            xhr.send(fd);
+        }
+    }
+    document.getElementById('big-submit').addEventListener('click', patchSumbit);
 </script>
 </body>
 </html>
