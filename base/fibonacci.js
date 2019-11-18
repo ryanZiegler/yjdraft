@@ -36,3 +36,18 @@ function fibonacci(n) {
 
 console.log(fibonacci(10));
 console.log('执行次数:' + count);
+
+
+function fbnaci(n) {
+    const cache = [1, 1];
+    const fib = function(n) {
+        if (cache[n]) return cache[n];
+        if (n < 2) return 1;
+        const temp = fib(n - 1) + fib(n - 2);
+        cache[n] = temp;
+
+        return temp;
+    }
+    return fib(n);
+}
+console.log(fbnaci(0));

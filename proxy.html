@@ -3,8 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>proxy</title>
+    <style>
+        .container {
+            display: flex;
+            width: 1000px;
+            height: 200px;
+            border: 1px solid black;
+        }
+        .item {
+            /* width: 200px; */
+            flex-basis: 200px;
+            max-width: 300px;
+            height: 200px;
+        }
+        .item:nth-child(1) {
+            background-color: red;
+        }
+        .item:nth-child(2) {
+            background-color: blue;
+        }
+        .item:nth-child(3) {
+            background-color: green;
+        }
+        .item:nth-child(4) {
+            background-color: purple;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+    </div>
     <h1>使用Proxy 和 Reflect 实现双向数据绑定</h1>
     <input type="text" id="input">
     <h2>您输入的内容是： <i id="txt"></i></h2>
@@ -25,9 +57,9 @@
             }
         })
 
-         //监听input输入事件
-         input.addEventListener("keyup",(e)=>{
-            //修改代理对象的值
+        // 监听input输入事件
+        input.addEventListener("keyup",(e) => {
+            // 修改代理对象的值
             newProxy.text = e.target.value;
         })
   

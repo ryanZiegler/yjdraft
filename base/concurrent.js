@@ -26,7 +26,7 @@ class Concurrently {
                 return result;
             }).catch((err) => {
                 this.tasksActiveAmount -= 1;
-                this,this.executeTasks();
+                this.executeTasks();
 
                 throw err;
             });
