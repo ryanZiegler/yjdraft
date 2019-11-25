@@ -1,5 +1,5 @@
 /**
- * 大数之和
+ * 大数相加
  * @param {*} a 
  * @param {*} b 
  */
@@ -21,3 +21,13 @@ function bigNumberSum(a, b) {
 }
 
 console.log(bigNumberSum('0001', '002'));
+
+/**
+ * 千分位转化
+ * @param {*} num 
+ * 
+ */
+function numFormat(num) {
+    return num.toString().indexOf('.') !== -1 ? num.toLocaleString() : num.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+}
+console.log(numFormat(123456789));
