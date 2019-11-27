@@ -436,3 +436,29 @@ function radixSort(arr, maxDigit) {
 const radixArr = [63, 157, 189, 51, 101, 47, 141, 121, 157, 156, 194];
 radixSort(radixArr, 3);
 console.log('基数排序: ', radixArr);
+
+
+// arr.sort( function(a,b){ return a-b } );  升序   负数
+// arr.sort( function(a,b){ return b-a } );  降序   正数
+const versionArr = ["1.45.0","1.5","5","5.0","1.5.5.3","3.5.5.5.5.5"];
+
+function rule(a, b) {
+    const arr1 = a.split('.'),
+        arr2 = b.split('.'),
+        minLen = Math.min(arr1.length, arr2.length);
+
+    for(let i = 0; i < minLen; i++) {
+        if (+arr1[i] > +arr2[i]) {
+            return 1;
+        } else if (+arr1[i] < +arr2[i]) {
+            return -1;
+        }
+
+        // 4.8 和 4.8.0 比较, length短的排前面
+        if (i + 1 === minLen) {
+            return arr1.length > arr2.length ? 1 : -1;
+        }
+    }
+}
+
+console.log('版本号排序:', versionArr.sort(rule));
