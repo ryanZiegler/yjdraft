@@ -20,7 +20,7 @@ function curry(func) {
  *  add(1)(2)(3)；  // 6
  *  add(1)(2, 3);   // 6
  *  add(1, 2)(3);   // 6
- *  add(1, 2, 3);   // 6 
+ *  add(1, 2, 3);   // 6
  */
 function add() {
     let args = [].slice.call(arguments);

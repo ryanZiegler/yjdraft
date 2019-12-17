@@ -230,18 +230,44 @@
 // const arr = [{id: 1}, {id:2, pId: 1}, {id: 3, pId: 2}, {id: 4}, {id:3, pId: 2}, {id: 5, pId: 4}]
 // console.log(fn(arr)) // [{id: 1, child: [{id: 2, pId: 1, child: [{ id: 3, pId: 2}]}]}, {id: 4, child: [{id: 5, pId: 4}]}]
 
-let arr = [1,2,3,4,5,6,7,8,9,10,11,12,13],
-// let arr = [1,2,3],
-    origin = [],
-    i = 1;
+// let arr = [1,2,3,4,5,6,7,8,9,10,11,12,13],
+// // let arr = [1,2,3],
+//     origin = [],
+//     i = 1;
 
-while(arr.length) {
-    if (i % 2) {
-        origin.unshift(arr.pop());
-    } else {
-        origin.unshift(origin.pop());
+// while(arr.length) {
+//     if (i % 2) {
+//         origin.unshift(arr.pop());
+//     } else {
+//         origin.unshift(origin.pop());
+//     }
+//     i++
+// } 
+
+// console.log(origin);
+
+
+// const arr = [[1],[2],[3],[4]];
+// let count = 0;
+
+// arr[count] && arr[count].map(i => {
+//     count++;
+//     console.log(i);
+// })
+
+let temp = 0;
+let total = ['10','20','30']
+let list = [
+    {t: '101'},{t:'102'},{t:'103'},
+    {t: '201'},{t:'202'},{t:'203'},
+    {t: '301'},{t:'302'},{t:'303'},
+]
+
+for(let i=0; i< list.length;i++) {
+    if (list[i].t.indexOf(total[temp]) !== -1) {
+        list[i].a = total[temp];
+        temp ++;
     }
-    i++
-} 
+}
 
-console.log(origin);
+console.log(list);
