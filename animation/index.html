@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>点击劫持测试</title>
+    <style>
+        html,body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="iframe1" name="ifr1" src="https://iiamego.com/"  width="700"  height="700"  frameborder="10"> </iframe>
+    <script>
+        const iframe = document.getElementById('iframe1');
+        const iwindow = iframe.contentWindow;
+        const idoc = iframe.contentDocument;
+        console.log(window.frames['ifr1'].window === iwindow);
+    </script>
+</body>
+</html>

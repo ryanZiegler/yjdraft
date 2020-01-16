@@ -22,3 +22,5 @@ function _setInterval(fn, time, count) {
 // 1.标准中，setInterval()如果前一次代码没有执行完，则会跳过此次代码的执行。
 // 2.浏览器中，setInterval()如果前一次代码没有执行完，不会跳过此次代码，而是将其插在队列中，等待前一次代码执行完后立即执行。
 // 3.Node中，setInterval()会严格按照间隔时间执行：一直等待完成上一次代码函数后，再经过时间间隔，才会进行下一次调用。
+
+_setInterval(()=>{console.log('5555')}, 1000, 10);
