@@ -41,5 +41,22 @@ function add() {
     return fn;
 }
 
-  console.log(add(1)(2,3)(4,5,6)(7,8,9,10).toString());
-  add(1)(2,3)(4,5,6)(7,8,9,10)();
+console.log(add(1)(2,3)(4,5,6)(7,8,9,10).toString());
+add(1)(2,3)(4,5,6)(7,8,9,10)();
+
+
+// 柯里化
+function compose(...funcs) {
+    if (funcs.length ===0) {
+        return arg => arg
+    }
+    if (funcs.length ===1) {
+        return funcs[0]
+    }
+    return funcs.reduce((a, b) => (...args) => a(b(...args)))
+}
+const fn1 = function() {console.log(1)}
+const fn2 = function() {console.log(2)}
+const fn3 = function() {console.log(3)}
+const res = compose(fn1, fn2, fn3);
+console.log(res());

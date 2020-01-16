@@ -1,39 +1,144 @@
-# **友金草稿本**
+![logo.png](/images/logo.png "太阳花-lowPoly style")
 
-> 这里记录一些小草稿
+<details>
+<summary>展开查看</summary>
+太阳花 - lowPoly风格 ~
+</details>
 
+[我的一亩三分田](https://iiamego.com)
 
+## 前端学习笔记 FE-Notes
+---
+<!-- <details>
+<summary>JavaScript基础</summary>
+</details>
 
-### 基础 Base
+<details>
+<summary>CSS3</summary>
+</details>
 
-1. 柯里化 [curry.js](https://github.com/ryanZiegler/yjdraft/blob/master/base/curry.js)
-2. 深拷贝 [deepCopy.js](https://github.com/ryanZiegler/yjdraft/blob/master/base/deepCopy.js)
+<details>
+<summary>浏览器原理</summary>
+</details>
 
-3. 继承 [inherit.js](https://github.com/ryanZiegler/yjdraft/blob/master/base/inherit.js)
-4. 笛卡尔积 [myDescartes.js](https://github.com/ryanZiegler/yjdraft/blob/master/base/myDescartes.js)
-5. call, apply 和 bind [myPoint.js](https://github.com/ryanZiegler/yjdraft/blob/master/base/myPoint.js)
-6. Promise [myPromise.js](https://github.com/ryanZiegler/yjdraft/blob/master/base/myPromise.js)
-7. Array.reduce [myReduce.js](https://github.com/ryanZiegler/yjdraft/blob/master/base/myReduce.js)
-8. 排序 [sort.js](https://github.com/ryanZiegler/yjdraft/blob/master/base/sort.js)
-9. 防抖/节流 [throttle.js](https://github.com/ryanZiegler/yjdraft/blob/master/base/throttle.js)
-10. 事件总线 [vueBus.js](https://github.com/ryanZiegler/yjdraft/blob/master/base/vueBus.js)
+<details>
+<summary>计算机原理</summary>
+</details>
 
-### 画布 Canvas
+<details>
+<summary>Vue一把梭</summary>
+</details>
 
-1. lowPoly 风格
-2. 灭霸响指
+<details>
+<summary>React全家桶</summary>
+</details>
+
+<details>
+<summary>前端工程化</summary>
+</details>
+
+<details>
+<summary>性能优化</summary>
+</details>
+
+<details>
+<summary>数据库</summary>
+</details>
+
+<details>
+<summary>服务器</summary>
+</details>
+
+<details>
+<summary>小程序</summary>
+</details> -->
+
+### JavaScript基础
+
+- [原生js发请求](/base/ajax.js)
+- [手写并发池](/base/concurrent.js)
+- [柯里化](/base/curry.js)  
+- [深拷贝](/base/deepCopy.js)
+- [继承](/base/inherit.js)
+- [jsonp请求](/base/jsonp.js)
+- [koa简析](/base/koa.js)
+- [笛卡尔积](/base/myDescartes.js)
+- [call, apply 和 bind](/base/myPoint.js)
+- [Promise](/base/myPromise.js)
+- [Array.reduce](/base/myReduce.js)
+- [手写parseInt](/base/parseInt.js)
+- [定时器setTimeout](/base/setTimeout.js)
+- [排序](/base/sort.js)
+- [防抖/节流](/base/throttle.js)
+- [事件总线](/base/vueBus.js)
+- [大文件上传](/back/static/index.html)
+- [Node多线程(worke_threads)](/back/worker_threads/main.js)
+- [简单的VUE双向绑定](/vueStudy/proxy.html)
 
 ### 练习 Practice
 
-1. 数组交集 [intersection.js](https://github.com/ryanZiegler/yjdraft/blob/master/practice/intersection.js)
+> 记录一些平时工作,面试,生活中遇到的练习题  
+> 更多算法题可以登录 [LeetCode](https://leetcode-cn.com/problemset/all/) 题库进行系统地学习  
+> 每天一道大厂面试题 [壹题](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues) - 木易杨   
+> 用JavaScript实现的算法和数据结构 [awesome-coding-js](http://www.conardli.top/docs/) - ConardLi  
+> [前端该如何准备数据结构和算法？](https://juejin.im/post/5d5b307b5188253da24d3cd1) - 知乎ConardLi  
+
+1. [大数相加](/practice/bigNumber.js)
+```
+Number.MAX_VALUE
+=> 1.7976931348623157e+308
+
+Number.MIN_VALUE
+=> 5e-324
+
+计算超出范围的大数相加
+```
+
+2. [二叉搜索树](/practice/bst.js)
+```
+1.生成一颗二叉搜索树,并写出其前序,中序,后序遍历,最大深度
+2.输入前序遍历序列 [1,2,4,7,3,5,6,8] 和中序遍历序列 [4,7,2,1,5,3,8,6]，则重建二叉树并返回
+3.给定一棵二叉树的前序遍历和中序遍历，求其后序遍历
+4.镜像二叉树
+5.二叉搜索树找出第k小的节点
+```
+
+3. [背包问题-动态规划](/practice/dynamicProgramming.js)
+```
+有1块、4块、5块的硬币，求总数和为n的最小硬币数
+```
+
+4. [斐波那契数列](/practice/fibonacci.js)
+```
+1.求斐波那契数列第n项
+2.减少额外空间开销
+```
+
+5. [数组交集](/practice/intersection.js)
 ```
 计算两个数组的交集
 输入: [1,1,2,2] [1,2]
 输出: [1,2]
 ```
-2. 二叉树寻址 [pathSum.js](https://github.com/ryanZiegler/yjdraft/blob/master/practice/pathSum.js)
+
+6. [字符串最长子序列](/practice/maxCount.js)
+```
+找出字符串中最长子序列
+```
+
+7. [二叉树寻址](/practice/pathSum.js)
 ```
 给出一个sum,判断二叉树中是否存在和为sum的头尾路径
 ```
-3. [test.js](https://github.com/ryanZiegler/yjdraft/blob/master/practice/test.js)
 
+## 魔法禁书目录
+---
+1. lowPoly 风格
+2. 灭霸响指
+
+## 工具人武装列表
+---
+
+## 待办
+---
+- [ ] 魔法目录页

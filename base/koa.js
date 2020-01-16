@@ -37,18 +37,3 @@ class Koa {
 //     onerror 清空响应头,抛出err给app实例
 // Request
 // Response
-
-function compose(...funcs) {
-    if (funcs.length ===0) {
-        return arg => arg
-    }
-    if (funcs.length ===1) {
-        return funcs[0]
-    }
-    return funcs.reduce((a, b) => (...args) => a(b(...args)))
-}
-const fn1 = function() {console.log(1)}
-const fn2 = function() {console.log(2)}
-const fn3 = function() {console.log(3)}
-const res = compose(fn1, fn2, fn3);
-console.log(res());
