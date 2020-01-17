@@ -7,6 +7,8 @@
 
 [我的一亩三分田](https://iiamego.com)
 
+
+
 ## 前端学习笔记 FE-Notes
 ---
 <!-- <details>
@@ -131,14 +133,44 @@ Number.MIN_VALUE
 给出一个sum,判断二叉树中是否存在和为sum的头尾路径
 ```
 
+
+
 ## 魔法禁书目录
 ---
-1. lowPoly 风格
-2. 灭霸响指
+1. [lowPoly 风格](http://www.iiamego.com/animation/canvas/lowPoly/)  
+通过Canvas获取图片像素点(边缘检测算法 Sobel 收集亮度大于40的边缘点), delaunay 获取三角坐标,获取三角中心坐标,计算中心点色值,最后绘制三角形
+![doggy.png](/images/animation/lowPoly.png "doggy-lowPoly")
 
-## 工具人武装列表
+2. [灭霸响指](http://www.iiamego.com/animation/canvas/thanos/)  
+将图片像素点平均分布到多个Canvas画布上,通过js动画移除 Canvas,营造出粒子灰飞烟灭效果
+![thanos.gif](/images/animation/thanos.gif "thanos-animate")
+
+3. [爱, 死亡和机器人（Love,Death&Robots）](http://www.iiamego.com/animation/gsap/LoveDeathRobots/)  
+通过gsap创造补间动画,让页面按照设置的时间轴变化动画 
+![loveDeathRobots.gif](/images/animation/loveDeathRobots.gif "loveDeathRobots-animate")
+
+4. [3D耐克标](http://www.iiamego.com/animation/threejs/init.html)  
+玩玩 ThreeJs, 通过贝塞尔曲线画一个耐克钩子
+![nike.png](/images/animation/nike.png "nike-3d")
+
+5. [动态简历](http://www.iiamego.com/resume)  
+通过 Vue 制作的动态简历,通过 requestAnimationFrame 优化
+
+
+
+## 工具人装备列表
 ---
+
+### 一派溪山千古秀
+- [ping](http://ping.pe/) ping IP是否可用
+
+### 图画里龙不吟虎不啸
+- [iconfont+](https://www.iconfont.cn/) 阿里妈妈MUX倾力打造的矢量图标管理、交流平台。
+- [画SVG](http://editor.method.ac/) 在线画图自定义生成svg, 完成后点击网页上的File->save默认保存为svg格式
+
+
 
 ## 待办
 ---
 - [ ] 魔法目录页
+- [ ] 灭霸响指动画
