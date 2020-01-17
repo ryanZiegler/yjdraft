@@ -10,7 +10,7 @@
 
 
 ## 前端学习笔记 FE-Notes
----
+
 <!-- <details>
 <summary>JavaScript基础</summary>
 </details>
@@ -136,7 +136,7 @@ Number.MIN_VALUE
 
 
 ## 魔法禁书目录
----
+
 1. [lowPoly 风格](http://www.iiamego.com/animation/canvas/lowPoly/)  
 通过Canvas获取图片像素点(边缘检测算法 Sobel 收集亮度大于40的边缘点), delaunay 获取三角坐标,获取三角中心坐标,计算中心点色值,最后绘制三角形
 ![doggy.png](/images/animation/lowPoly.png "doggy-lowPoly")
@@ -146,7 +146,7 @@ Number.MIN_VALUE
 ![thanos.gif](/images/animation/thanos.gif "thanos-animate")
 
 3. [爱, 死亡和机器人（Love,Death&Robots）](http://www.iiamego.com/animation/gsap/LoveDeathRobots/)  
-通过gsap创造补间动画,让页面按照设置的时间轴变化动画 
+通过gsap创造补间动画,让页面按照设置的时间轴变化动画  
 ![loveDeathRobots.gif](/images/animation/loveDeathRobots.gif "loveDeathRobots-animate")
 
 4. [3D耐克标](http://www.iiamego.com/animation/threejs/init.html)  
@@ -159,18 +159,19 @@ Number.MIN_VALUE
 
 
 ## 工具人装备列表
----
+
 
 ### 一派溪山千古秀
 - [ping](http://ping.pe/) ping IP是否可用
 
 ### 图画里龙不吟虎不啸
+- [github图标](https://github.com/caiyongji/emoji-list) github图标大全
 - [iconfont+](https://www.iconfont.cn/) 阿里妈妈MUX倾力打造的矢量图标管理、交流平台。
 - [画SVG](http://editor.method.ac/) 在线画图自定义生成svg, 完成后点击网页上的File->save默认保存为svg格式
 
 
 
 ## 待办
----
+
 - [ ] 魔法目录页
 - [ ] 灭霸响指动画
