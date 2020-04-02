@@ -255,19 +255,60 @@
 //     console.log(i);
 // })
 
-let temp = 0;
-let total = ['10','20','30']
-let list = [
-    {t: '101'},{t:'102'},{t:'103'},
-    {t: '201'},{t:'202'},{t:'203'},
-    {t: '301'},{t:'302'},{t:'303'},
-]
+// let temp = 0;
+// let total = ['10','20','30']
+// let list = [
+//     {t: '101'},{t:'102'},{t:'103'},
+//     {t: '201'},{t:'202'},{t:'203'},
+//     {t: '301'},{t:'302'},{t:'303'},
+// ]
 
-for(let i=0; i< list.length;i++) {
-    if (list[i].t.indexOf(total[temp]) !== -1) {
-        list[i].a = total[temp];
-        temp ++;
+// for(let i=0; i< list.length;i++) {
+//     if (list[i].t.indexOf(total[temp]) !== -1) {
+//         list[i].a = total[temp];
+//         temp ++;
+//     }
+// }
+
+// console.log(list);
+
+// let prices = [7,1,5,3,6,4];
+
+// 暴力枚举
+function getMaxIncome(prices) {
+    let max = 0;
+    
+    for(let i = 0; i < prices.length; i++) {
+        for(let j = i + 1; j < prices.length; j++) {
+            max = Math.max(max, prices[j] - prices[i]);
+        }
     }
+
+    return max;
 }
 
-console.log(list);
+let prices = [1,7,3,7,4,8];
+// 双指针
+function getMaxIncomeSec(prices) {
+    let max = 0;
+    let low = 0,
+        lowIndex = 0,
+        high = prices.length - 1,
+        highIndex = prices.length - 1;
+
+    while(low < high) {
+        if(prices[high] > prices[highIndex]) {
+            highIndex = high;
+        }
+        if (prices[low] < prices[lowIndex]) {
+            lowIndex = low;
+        }
+        max = Math.max(max, prices[highIndex] - prices[lowIndex]);
+        low++;
+        high--;
+    }
+
+    return max;
+}
+
+console.log(getMaxIncomeSec(prices));

@@ -35,9 +35,9 @@ function hashIntersection() {
         }
     });
     for(let i = 0; i < b.length; i++) {
-        if (hash[a[i]] > 0) {
-            c.push(a[i]);
-            hash[a[i]]--;
+        if (hash[b[i]] > 0) {
+            c.push(b[i]);
+            hash[b[i]]--;
         }
     }
 
