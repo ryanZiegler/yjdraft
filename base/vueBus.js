@@ -10,6 +10,7 @@ EventEmeitter.prototype.emit = function(type, ...args) {
     let handler;
     // 从回调函数键值对取出对应回调方法
     handler = this._events.get(type);
+    if (!handler) return false;
 
     if (Array.isArray(handler)) {
         // 如果是一个数组说明有多个监听者,需要依次此触发里面的函数
@@ -31,7 +32,7 @@ EventEmeitter.prototype.emit = function(type, ...args) {
     return true;
 } 
 
-// 监听 type 事件
+// 监听 type 事件,别名 on
 EventEmeitter.prototype.addListener = function(type, fn) {
     const handler = this._events.get(type);
     if (!handler) {
@@ -44,7 +45,16 @@ EventEmeitter.prototype.addListener = function(type, fn) {
     }
 }
 
-// 移除 type 监听
+// once
+EventEmeitter.prototype.once = function(type, fn) {
+    let wrapFunc = (...args) => {
+        fn.apply(this, args);
+        this.removeListener(type, wrapFunc);
+    }
+    this.addListener(type, wrapFunc);
+}
+
+// 移除 type 监听,别名 off
 EventEmeitter.prototype.removeListener = function(type, fn) {
     const handler = this._events.get(type);
 
@@ -84,3 +94,10 @@ emitter.addListener('test', (test) => {
 
 emitter.emit('test', 'hello');
 emitter.emit('test', 'bye');
+
+emitter.once('once', (test) => {
+    console.log(`just once ${test}`);
+});
+
+emitter.emit('once', 'hello'); 
+emitter.emit('once', 'bye');
