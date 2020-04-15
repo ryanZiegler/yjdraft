@@ -10,4 +10,4 @@ function myDescartes() {
     }, [[]]);
 }
 
-console.log(myDescartes(['1', '8'], ['a', 'c'], ['x', 'y']));
+console.log(myDescartes(['1', '8'], ['a', 'c'], ['x', 'y'], ['[', '}']));
